@@ -23,6 +23,7 @@ import com.google.accompanist.pager.*
 import com.madcamp.phonebook.presentation.ContactsList
 import com.madcamp.phonebook.presentation.generateSampleContacts
 import com.madcamp.phonebook.ui.theme.Blue400
+
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -137,6 +138,23 @@ fun TabContentScreen(data: String) {
             text = data,
             style = MaterialTheme.typography.h5,
             color = Blue400,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
+fun TabContentScreen(data: String) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = data,
+            style = MaterialTheme.typography.h5,
+            color = greenColor,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center
         )
