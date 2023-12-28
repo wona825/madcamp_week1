@@ -19,8 +19,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
 import com.madcamp.phonebook.ui.theme.PhonebookTheme
-import com.madcamp.phonebook.ui.theme.greenColor
 import com.google.accompanist.pager.*
+import com.madcamp.phonebook.presentation.ContactsList
+import com.madcamp.phonebook.presentation.generateSampleContacts
+import com.madcamp.phonebook.ui.theme.Blue400
+
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -44,18 +47,18 @@ fun TabLayout() {
     Column(
         modifier = Modifier.background(Color.White)
     ) {
-        TopAppBar(backgroundColor = greenColor) {
+        TopAppBar(backgroundColor = Blue400) {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "Tab Layout",
+                    text = "❀´▽`❀ ",
                     style = TextStyle(color = Color.White),
                     fontWeight = FontWeight.Bold,
                     fontSize = TextUnit(
-                        18F,
+                        20F,
                         TextUnitType.Sp
                     ),
                     modifier = Modifier.padding(all = Dp(5F)),
@@ -79,7 +82,7 @@ fun Tabs(pagerState: PagerState) {
     val scope = rememberCoroutineScope()
     TabRow(
         selectedTabIndex = pagerState.currentPage,
-        backgroundColor = greenColor,
+        backgroundColor = Blue400,
         contentColor = Color.White,
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
@@ -117,10 +120,27 @@ fun TabsContent(pagerState: PagerState) {
     HorizontalPager(state = pagerState) {
             page ->
         when (page) {
-            0 -> TabContentScreen(data = "Welcome to Screen 1")
+            0 -> ContactsList(contacts = generateSampleContacts())
             1 -> TabContentScreen(data = "Welcome to Screen 2")
             2 -> TabContentScreen(data = "Welcome to Screen 3")
         }
+    }
+}
+
+@Composable
+fun TabContentScreen(data: String) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = data,
+            style = MaterialTheme.typography.h5,
+            color = Blue400,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center
+        )
     }
 }
 
