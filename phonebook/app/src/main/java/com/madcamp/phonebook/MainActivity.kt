@@ -144,19 +144,3 @@ fun TabContentScreen(data: String) {
     }
 }
 
-@Composable
-fun TabContentScreen(data: String) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = data,
-            style = MaterialTheme.typography.h5,
-            color = greenColor,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center
-        )
-    }
-}
