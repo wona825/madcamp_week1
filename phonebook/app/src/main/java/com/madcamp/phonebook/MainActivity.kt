@@ -1,146 +1,94 @@
 package com.madcamp.phonebook
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
+import android.app.Activity
+import android.content.Context
+import android.content.pm.PackageManager
+import android.database.Cursor
+import android.provider.ContactsContract
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Call
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.*
 import com.madcamp.phonebook.ui.theme.PhonebookTheme
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.compose.ui.unit.*
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.accompanist.pager.*
-import com.madcamp.phonebook.presentation.ContactsList
-import com.madcamp.phonebook.presentation.generateSampleContacts
-import com.madcamp.phonebook.ui.theme.Blue400
-
-import kotlinx.coroutines.launch
+import com.madcamp.phonebook.domain.model.Contact
+import com.madcamp.phonebook.presentation.TabLayout
 
 class MainActivity : ComponentActivity() {
+    var contactList by mutableStateOf<List<Contact>>(emptyList())
+
     @OptIn(ExperimentalPagerApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             PhonebookTheme {
-                TabLayout()
+                TabLayout(contactList)
             }
         }
+
+        // Check contacts permission and retrieve contacts
+        if (hasContactPermission(this)) {
+            retrieveContacts()
+        } else {
+            requestContactPermission(this)
+        }
     }
-}
 
-@ExperimentalPagerApi
-@Composable
-fun TabLayout() {
-
-    val pagerState = rememberPagerState(pageCount = 3)
-
-    Column(
-        modifier = Modifier.background(Color.White)
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
     ) {
-        TopAppBar(backgroundColor = Blue400) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = "❀´▽`❀ ",
-                    style = TextStyle(color = Color.White),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = TextUnit(
-                        20F,
-                        TextUnitType.Sp
-                    ),
-                    modifier = Modifier.padding(all = Dp(5F)),
-                    textAlign = TextAlign.Center
-                )
-            }
-        }
-        Tabs(pagerState = pagerState)
-        TabsContent(pagerState = pagerState)
-    }
-}
-
-@ExperimentalPagerApi
-@Composable
-fun Tabs(pagerState: PagerState) {
-    val list = listOf(
-        "Friends" to Icons.Default.Call,
-        "Favorites" to Icons.Default.Favorite,
-        "Settings" to Icons.Default.Settings
-    )
-    val scope = rememberCoroutineScope()
-    TabRow(
-        selectedTabIndex = pagerState.currentPage,
-        backgroundColor = Blue400,
-        contentColor = Color.White,
-        indicator = { tabPositions ->
-            TabRowDefaults.Indicator(
-                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
-                height = 2.dp,
-                color = Color.White
-            )
-        }
-    ) {
-        list.forEachIndexed { index, _ ->
-            Tab(
-                icon = {
-                    Icon(imageVector = list[index].second, contentDescription = null)
-                },
-                text = {
-                    Text(
-                        list[index].first,
-                        color = if (pagerState.currentPage == index) Color.White else Color.LightGray
-                    )
-                },
-                selected = pagerState.currentPage == index,
-                onClick = {
-                    scope.launch {
-                        pagerState.animateScrollToPage(index)
-                    }
-                }
-            )
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 1 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // Permission granted, retrieve contacts
+            retrieveContacts()
         }
     }
-}
 
-@ExperimentalPagerApi
-@Composable
-fun TabsContent(pagerState: PagerState) {
-    HorizontalPager(state = pagerState) {
-            page ->
-        when (page) {
-            0 -> ContactsList(contacts = generateSampleContacts())
-            1 -> TabContentScreen(data = "Welcome to Screen 2")
-            2 -> TabContentScreen(data = "Welcome to Screen 3")
-        }
-    }
-}
-
-@Composable
-fun TabContentScreen(data: String) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = data,
-            style = MaterialTheme.typography.h5,
-            color = Blue400,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center
+    private fun retrieveContacts() {
+        val contacts = mutableListOf<Contact>()
+        val cursor: Cursor? = contentResolver.query(
+            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+            null,
+            null,
+            null,
+            null
         )
+
+        cursor?.use {
+            while (it.moveToNext()) {
+                val number: String =
+                    it.getString(it.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                val name: String =
+                    it.getString(it.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
+
+                contacts.add(Contact(name, number))
+            }
+            contactList = contacts
+        }
+    }
+
+    private fun hasContactPermission(context: Context): Boolean {
+        return ContextCompat.checkSelfPermission(
+            context,
+            "android.permission.READ_CONTACTS"
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun requestContactPermission(activity: Activity) {
+        if (!hasContactPermission(activity)) {
+            ActivityCompat.requestPermissions(
+                activity,
+                arrayOf("android.permission.READ_CONTACTS"),
+                1
+            )
+        }
     }
 }
 

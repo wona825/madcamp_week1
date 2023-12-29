@@ -4,7 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Contact(
-    val id: Int,
-    val name: String,
-    val phoneNumber: String
+    var name: String = "",
+    var phoneNumber: String = "",
+//    var nickname: String = "",
+//    var email: String = ""
 )
