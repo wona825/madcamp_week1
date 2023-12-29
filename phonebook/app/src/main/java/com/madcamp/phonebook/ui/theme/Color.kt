@@ -12,4 +12,8 @@ val Pink40 = Color(0xFF7D5260)
 
 // add custom colors
 val Blue400 = Color(0xFF29B6F6)
+
+val Gray100 = Color(0XFFF5F5F5)
 val Gray200 = Color(0xFFEEEEEE)
+val Gray400 = Color(0xFFBDBDBD)
+
