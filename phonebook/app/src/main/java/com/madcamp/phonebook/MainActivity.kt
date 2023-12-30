@@ -8,8 +8,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,9 +18,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
+import com.google.accompanist.pager.*
 import com.madcamp.phonebook.ui.theme.PhonebookTheme
 import com.madcamp.phonebook.ui.theme.greenColor
-import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -114,15 +114,18 @@ fun Tabs(pagerState: PagerState) {
 @ExperimentalPagerApi
 @Composable
 fun TabsContent(pagerState: PagerState) {
+    //SupportFragmentManager로 FragmentManager를 호출
+    //supportFragmentManager.beginTransaction().add(R.id.container_smaple, sampleFragment).commit()
     HorizontalPager(state = pagerState) {
             page ->
         when (page) {
             0 -> TabContentScreen(data = "Welcome to Screen 1")
-            1 -> TabContentScreen(data = "Welcome to Screen 2")
+            1 -> Gallery_Frag()
             2 -> TabContentScreen(data = "Welcome to Screen 3")
         }
     }
 }
+
 
 @Composable
 fun TabContentScreen(data: String) {
