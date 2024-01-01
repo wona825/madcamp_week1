@@ -17,3 +17,4 @@ val Gray100 = Color(0XFFF5F5F5)
 val Gray200 = Color(0xFFEEEEEE)
 val Gray400 = Color(0xFFBDBDBD)
 
+val Green300 = Color(0xFFA3C585)

@@ -2,42 +2,51 @@ package com.madcamp.phonebook
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
-import android.provider.ContactsContract
+import android.net.Uri
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.runtime.*
-import com.madcamp.phonebook.ui.theme.PhonebookTheme
 import android.os.Bundle
+import android.provider.ContactsContract
 import androidx.activity.ComponentActivity
-import androidx.compose.ui.unit.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import com.google.accompanist.pager.*
+import androidx.lifecycle.ViewModelProvider
 import com.madcamp.phonebook.domain.model.Contact
-import com.madcamp.phonebook.presentation.TabLayout
+import com.madcamp.phonebook.navigation.NavGraph
+import com.madcamp.phonebook.presentation.contact.viewmodel.ContactViewModel
+import com.madcamp.phonebook.ui.theme.PhonebookTheme
 
-class MainActivity : ComponentActivity() {
-    var contactList by mutableStateOf<List<Contact>>(emptyList())
+class MainActivity : ComponentActivity(), ContactViewModel.PhoneCallListener, ContactViewModel.SendMessageListener {
+    private lateinit var contactViewModel: ContactViewModel
 
-    @OptIn(ExperimentalPagerApi::class)
-    override fun onCreate(savedInstanceState: Bundle?) {
+    private var contactList by mutableStateOf<List<Contact>>(emptyList())
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
+
+        contactViewModel = ViewModelProvider(this).get(ContactViewModel::class.java)
+
+        contactViewModel.phoneCallListener = this
+        contactViewModel.sendMessageListener = this
+
+
         setContent {
             PhonebookTheme {
-                TabLayout(contactList)
+                NavGraph(activity = this, contactList = contactList, contactViewModel = contactViewModel)
             }
         }
 
-        // Check contacts permission and retrieve contacts
         if (hasContactPermission(this)) {
             retrieveContacts()
         } else {
             requestContactPermission(this)
         }
-    }
+}
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -49,6 +58,20 @@ class MainActivity : ComponentActivity() {
             // Permission granted, retrieve contacts
             retrieveContacts()
         }
+    }
+
+    override fun makePhoneCall(phoneNumber: String) {
+        val intent = Intent(Intent.ACTION_DIAL)
+        intent.data = Uri.parse("tel:$phoneNumber")
+
+        startActivity(intent)
+    }
+
+    override fun sendMessage(phoneNumber: String) {
+        val intent = Intent(Intent.ACTION_SENDTO)
+        intent.data = Uri.parse("smsto:$phoneNumber")
+
+        startActivity(intent)
     }
 
     private fun retrieveContacts() {
@@ -75,10 +98,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun hasContactPermission(context: Context): Boolean {
-        return ContextCompat.checkSelfPermission(
-            context,
-            "android.permission.READ_CONTACTS"
-        ) == PackageManager.PERMISSION_GRANTED
+        return context.checkSelfPermission("android.permission.READ_CONTACTS") == PackageManager.PERMISSION_GRANTED
     }
 
     private fun requestContactPermission(activity: Activity) {

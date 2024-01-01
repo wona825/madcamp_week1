@@ -1,15 +1,12 @@
-package com.madcamp.phonebook.presentation
+package com.madcamp.phonebook.presentation.contact
 
-import android.app.Activity
-import android.content.Context
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -20,28 +17,34 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.madcamp.phonebook.domain.model.Contact
+import com.madcamp.phonebook.navigation.Screen
 import com.madcamp.phonebook.ui.theme.Gray200
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ContactListScreen(
+    navController: NavController,
     contactList: List<Contact>
 ) {
+    val screen = Screen()
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        val activity = LocalContext.current as Activity
-
-        val grouped = contactList.groupBy {
-            it.name.first().getKoreanConsonant()
+        val grouped = if (contactList != mutableListOf(Contact())) {
+            contactList.groupBy {
+                it.name.first().getKoreanConsonant()
+            }
+        } else {
+            emptyMap()
         }
 
         val sortedGrouped = grouped.toSortedMap()
@@ -49,12 +52,15 @@ fun ContactListScreen(
         if (contactList.isNotEmpty()) {
             LazyColumn {
                 sortedGrouped.forEach { (initial, contactsForInitial) ->
+
                     stickyHeader {
                         CharacterHeader(initial)
                     }
 
                     items(contactsForInitial) { contact ->
-                        ContactListItem(contact)
+                        ContactListItem(contact, onCLick = {
+                            navController.navigate(screen.ContactDetailScreen + "/${contact.phoneNumber}")
+                        })
                     }
                 }
             }
@@ -67,6 +73,7 @@ fun ContactListScreen(
         }
     }
 }
+
 
 // header 표기를 위한 변환
 fun Char.getKoreanConsonant(): Char {
@@ -112,11 +119,15 @@ fun CharacterHeader(char: Char) {
 }
 
 @Composable
-fun ContactListItem(contact: Contact) {
+fun ContactListItem(
+    contact: Contact,
+    onCLick: () -> Unit = {}
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(2.dp),
+            .padding(2.dp)
+            .clickable { onCLick() },
         backgroundColor = Color.White
     ) {
         Column(
