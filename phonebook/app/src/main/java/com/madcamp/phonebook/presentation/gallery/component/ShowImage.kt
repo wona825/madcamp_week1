@@ -1,4 +1,4 @@
-package com.madcamp.phonebook.Gallery_Navigation.Gallery_Tab.Gallery_Screen
+package com.madcamp.phonebook.presentation.gallery.component
 
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
@@ -19,16 +19,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.madcamp.phonebook.MainActivity
+import com.madcamp.phonebook.navigation.Screen
 
 // Show each image on the screen.
 @RequiresApi(Build.VERSION_CODES.R)
 @Composable
-fun FavoriteImage(navController:NavController, favorite: MainActivity.favorites, favorite_list: MutableList<MainActivity.favorites>){
+fun ShowImage(navController:NavController, favorite: MainActivity.favorites, favorite_list: MutableList<MainActivity.favorites>){
 
     val bitmap = remember { mutableStateOf<Bitmap?>(null) }
     val imageUri = favorite.image
     val context = LocalContext.current
-    val screen_width = ((getScreenWidth(LocalContext.current).toDouble()) / 3).toInt()
+    val screen = Screen()
+    val screenWidth = ((getScreenWidth(LocalContext.current).toDouble()) / 3).toInt()
 
     imageUri?.let {
         if (Build.VERSION.SDK_INT < 28) {
@@ -44,11 +46,11 @@ fun FavoriteImage(navController:NavController, favorite: MainActivity.favorites,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .width(screen_width.dp)
-                    .height(screen_width.dp)
+                    .width(screenWidth.dp)
+                    .height(screenWidth.dp)
                     .clickable {
                         val this_index = favorite_list.indexOf(favorite)
-                        navController.navigate("Image_Tab/${this_index}")
+                        navController.navigate(screen.ImageDetailScreen + "/${this_index}")
                     }
 
             )
