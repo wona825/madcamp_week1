@@ -74,7 +74,7 @@ fun ContactDetailScreen(
                 imageVector = Icons.Filled.KeyboardArrowLeft,
                 modifier = Modifier
                     .size(50.dp)
-                    .clickable { navController.navigate(screen.MainScreen) },
+                    .clickable { navController.popBackStack() },
                 contentDescription = "back_button",
                 tint = Color.Black
             )
