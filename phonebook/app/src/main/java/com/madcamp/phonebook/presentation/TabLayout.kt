@@ -1,5 +1,7 @@
 package com.madcamp.phonebook.presentation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -23,6 +25,8 @@ import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.madcamp.phonebook.domain.model.Contact
 import com.madcamp.phonebook.presentation.contact.ContactListScreen
+import com.madcamp.phonebook.presentation.gallery.component.Gallery_Tab
+import com.madcamp.phonebook.MainActivity.favorites
 import com.madcamp.phonebook.ui.theme.Blue400
 import kotlinx.coroutines.launch
 
@@ -30,6 +34,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun TabLayout(
     contactList: List<Contact>,
+    favoriteList: MutableList<favorites>,
     navController: NavController
 ) {
     val pagerState = rememberPagerState(pageCount = 3)
@@ -54,7 +59,7 @@ fun TabLayout(
             }
         }
         Tabs(pagerState = pagerState)
-        TabsContent(pagerState = pagerState, contactList = contactList, navController = navController)
+        TabsContent(pagerState = pagerState, contactList = contactList, favoriteList, navController = navController)
     }
 }
 
@@ -101,11 +106,13 @@ fun Tabs(pagerState: PagerState) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.R)
 @ExperimentalPagerApi
 @Composable
 fun TabsContent(
     pagerState: PagerState,
     contactList: List<Contact>,
+    favoriteList: MutableList<favorites>,
     navController: NavController,
     onClick: () -> Unit = {}
 ) {
@@ -113,7 +120,7 @@ fun TabsContent(
     HorizontalPager(state = pagerState) { page ->
         when (page) {
             0 -> ContactListScreen(navController, contactList)
-            1 -> {}
+            1 -> Gallery_Tab(navController = navController, favoritelist = favoriteList)
             2 -> TabContentScreen(data = "Welcome to Screen 3")
         }
     }
