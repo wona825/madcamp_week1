@@ -15,18 +15,23 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.madcamp.phonebook.domain.model.Contact
+import com.madcamp.phonebook.presentation.contact.ContactListScreen
 import com.madcamp.phonebook.ui.theme.Blue400
 import kotlinx.coroutines.launch
 
 @ExperimentalPagerApi
 @Composable
-fun TabLayout(contactList: List<Contact>) {
+fun TabLayout(
+    contactList: List<Contact>,
+    navController: NavController
+) {
     val pagerState = rememberPagerState(pageCount = 3)
 
     Column(
@@ -49,7 +54,7 @@ fun TabLayout(contactList: List<Contact>) {
             }
         }
         Tabs(pagerState = pagerState)
-        TabsContent(pagerState = pagerState, contactList = contactList)
+        TabsContent(pagerState = pagerState, contactList = contactList, navController = navController)
     }
 }
 
@@ -98,11 +103,16 @@ fun Tabs(pagerState: PagerState) {
 
 @ExperimentalPagerApi
 @Composable
-fun TabsContent(pagerState: PagerState, contactList: List<Contact>) {
+fun TabsContent(
+    pagerState: PagerState,
+    contactList: List<Contact>,
+    navController: NavController,
+    onClick: () -> Unit = {}
+) {
 
     HorizontalPager(state = pagerState) { page ->
         when (page) {
-            0 -> ContactListScreen(contactList)
+            0 -> ContactListScreen(navController, contactList)
             1 -> {}
             2 -> TabContentScreen(data = "Welcome to Screen 3")
         }

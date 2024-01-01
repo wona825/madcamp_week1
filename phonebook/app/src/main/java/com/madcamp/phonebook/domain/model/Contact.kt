@@ -6,6 +6,5 @@ import kotlinx.serialization.Serializable
 data class Contact(
     var name: String = "",
     var phoneNumber: String = "",
-//    var nickname: String = "",
-//    var email: String = ""
+    var favoriteStatus: Boolean = false
 )
