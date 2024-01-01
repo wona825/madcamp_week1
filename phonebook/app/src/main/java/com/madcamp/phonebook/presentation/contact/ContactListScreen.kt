@@ -2,11 +2,15 @@ package com.madcamp.phonebook.presentation.contact
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -14,6 +18,10 @@ import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,10 +29,13 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.madcamp.phonebook.domain.model.Contact
 import com.madcamp.phonebook.navigation.Screen
+import com.madcamp.phonebook.presentation.contact.component.SearchBox
 import com.madcamp.phonebook.ui.theme.Gray200
+import com.madcamp.phonebook.ui.theme.Gray400
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -34,41 +45,77 @@ fun ContactListScreen(
 ) {
     val screen = Screen()
 
+    var search by rememberSaveable { mutableStateOf("") }
+
+    // 검색된 연락처 목록
+    val filteredContacts = contactList.filter {
+        it.name.contains(search, ignoreCase = true) ||
+                it.phoneNumber.contains(search)
+    }
+
+    val grouped = if (filteredContacts != mutableListOf(Contact())) {
+        filteredContacts.groupBy {
+            it.name.first().getKoreanConsonant()
+        }
+    } else {
+        emptyMap()
+    }
+
+    val sortedGrouped = grouped.toSortedMap()
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Top
     ) {
-        val grouped = if (contactList != mutableListOf(Contact())) {
-            contactList.groupBy {
-                it.name.first().getKoreanConsonant()
-            }
-        } else {
-            emptyMap()
-        }
-
-        val sortedGrouped = grouped.toSortedMap()
-
         if (contactList.isNotEmpty()) {
-            LazyColumn {
-                sortedGrouped.forEach { (initial, contactsForInitial) ->
+            Spacer(modifier = Modifier.height(20.dp))
+            SearchBox(
+                text = search,
+                placeholder = "이름, 전화번호로 검색하기",
+                onValueChange = { newText ->
+                    search = newText
+                }
+            )
+            Spacer(modifier = Modifier.height(30.dp))
 
-                    stickyHeader {
-                        CharacterHeader(initial)
-                    }
+            if (sortedGrouped.isNotEmpty()) {
+                LazyColumn {
+                    sortedGrouped.forEach { (initial, contactsForInitial) ->
 
-                    items(contactsForInitial) { contact ->
-                        ContactListItem(contact, onCLick = {
-                            navController.navigate(screen.ContactDetailScreen + "/${contact.phoneNumber}")
-                        })
+                        stickyHeader {
+                            CharacterHeader(initial)
+                        }
+
+                        items(contactsForInitial) { contact ->
+                            ContactListItem(contact, onCLick = {
+                                navController.navigate(screen.ContactDetailScreen + "/${contact.phoneNumber}")
+                            })
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(1.dp)
+                                    .background(Gray200)
+                            )
+                        }
                     }
                 }
+            } else {
+                Text(
+                    text = "검색 결과가 존재하지 않습니다.",
+                    style = MaterialTheme.typography.body1,
+                    textAlign = TextAlign.Center,
+                    color = Gray400
+                )
             }
         } else {
+            Spacer(modifier = Modifier.height(30.dp))
+
             Text(
-                text = "No contact selected",
+                text = "No contact conntected",
                 style = MaterialTheme.typography.body1,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = Gray400
             )
         }
     }
@@ -103,16 +150,17 @@ fun CharacterHeader(char: Char) {
         modifier = Modifier
             .fillMaxWidth()
             .background(Gray200)
-            .padding(vertical = 1.dp)
+            .padding(horizontal = 16.dp, vertical = 2.dp)
     ) {
         Text(
             text = char.toString(),
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 4.dp),
+                .fillMaxWidth(),
             style = TextStyle(
                 color = Color.Black,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                fontSize = 12.sp
+
             )
         )
     }
@@ -126,13 +174,11 @@ fun ContactListItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(2.dp)
             .clickable { onCLick() },
         backgroundColor = Color.White
     ) {
         Column(
-            modifier = Modifier
-                .padding(16.dp)
+            modifier = Modifier.padding(16.dp)
         ) {
 
             Text(
