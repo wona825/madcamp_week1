@@ -6,10 +6,12 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
+import android.os.Build
 import androidx.activity.compose.setContent
 import android.os.Bundle
 import android.provider.ContactsContract
 import androidx.activity.ComponentActivity
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -23,7 +25,18 @@ import com.madcamp.phonebook.ui.theme.PhonebookTheme
 class MainActivity : ComponentActivity(), ContactViewModel.PhoneCallListener, ContactViewModel.SendMessageListener {
     private lateinit var contactViewModel: ContactViewModel
 
+    data class favorites (
+        var name: String,
+        val image: Uri?
+    )
+
     private var contactList by mutableStateOf<List<Contact>>(emptyList())
+
+    private var getlist: MutableList<favorites> =  mutableListOf<favorites>()  // list of favorites
+
+    private var delete_index:Int = -1
+
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
@@ -36,7 +49,7 @@ class MainActivity : ComponentActivity(), ContactViewModel.PhoneCallListener, Co
 
         setContent {
             PhonebookTheme {
-                NavGraph(activity = this, contactList = contactList, contactViewModel = contactViewModel)
+                NavGraph(activity = this, contactList = contactList, contactViewModel = contactViewModel, favoriteList = getlist, delete_index)
             }
         }
 
