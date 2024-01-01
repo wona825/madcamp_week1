@@ -1,11 +1,9 @@
 package com.madcamp.phonebook.navigation
 
-import android.net.Uri
 import android.os.Build
 import androidx.activity.ComponentActivity
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,9 +15,9 @@ import com.madcamp.phonebook.presentation.contact.ContactDetailScreen
 import com.madcamp.phonebook.presentation.contact.ContactListScreen
 import com.madcamp.phonebook.presentation.contact.viewmodel.ContactViewModel
 import com.madcamp.phonebook.presentation.TabLayout
-import com.madcamp.phonebook.presentation.gallery.component.Gallery_Tab
 import com.madcamp.phonebook.MainActivity.favorites
-import com.madcamp.phonebook.presentation.gallery.component.Image_Tab
+import com.madcamp.phonebook.presentation.gallery.GalleryScreen
+import com.madcamp.phonebook.presentation.gallery.ImageDetailScreen
 
 
 @RequiresApi(Build.VERSION_CODES.R)
@@ -29,8 +27,7 @@ fun NavGraph(
     activity: ComponentActivity,
     contactList: List<Contact>,
     contactViewModel: ContactViewModel,
-    favoriteList: MutableList<favorites>,
-    delete_index: Int
+    favoriteList: MutableList<favorites>
 ) {
     val screen = Screen()
     val navController = rememberNavController()
@@ -60,12 +57,12 @@ fun NavGraph(
             )
         }
         composable(screen.GalleryScreen){
-            Gallery_Tab(navController, favoriteList)
+            GalleryScreen(navController, favoriteList)
         }
 
-        composable(screen.GalleryDetailScreen+"/{index}", arguments = listOf(navArgument("index") { type = NavType.IntType })) { backStackEntry ->
+        composable(screen.ImageDetailScreen+"/{index}", arguments = listOf(navArgument("index") { type = NavType.IntType })) { backStackEntry ->
             val index = backStackEntry.arguments?.getInt("index") ?: -1
-            Image_Tab(navController, favoriteList, delete_index, favoriteList[index])
+            ImageDetailScreen(navController, favoriteList, favoriteList[index])
         }
 
     }
