@@ -12,8 +12,10 @@ import android.os.Bundle
 import android.provider.ContactsContract
 import androidx.activity.ComponentActivity
 import androidx.annotation.RequiresApi
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
@@ -27,14 +29,15 @@ class MainActivity : ComponentActivity(), ContactViewModel.PhoneCallListener, Co
 
     data class favorites (
         var name: String,
-        val image: Uri?
+        val image: Uri?,
+        var love: Boolean,
+        var description: String,
+        var valid: Boolean
     )
 
     private var contactList by mutableStateOf<List<Contact>>(emptyList())
 
     private var getlist: MutableList<favorites> =  mutableListOf<favorites>()  // list of favorites
-
-    private var delete_index:Int = -1
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?)
@@ -49,7 +52,7 @@ class MainActivity : ComponentActivity(), ContactViewModel.PhoneCallListener, Co
 
         setContent {
             PhonebookTheme {
-                NavGraph(activity = this, contactList = contactList, contactViewModel = contactViewModel, favoriteList = getlist, delete_index)
+                NavGraph(activity = this, contactList = contactList, contactViewModel = contactViewModel, favoriteList = getlist)
             }
         }
 
