@@ -14,9 +14,12 @@ import com.madcamp.phonebook.presentation.contact.ContactDetailScreen
 import com.madcamp.phonebook.presentation.contact.ContactListScreen
 import com.madcamp.phonebook.presentation.contact.viewModel.ContactViewModel
 import com.madcamp.phonebook.presentation.TabLayout
-import com.madcamp.phonebook.MainActivity.favorites
+import com.madcamp.phonebook.presentation.database.FavoriteViewModel
+import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 import com.madcamp.phonebook.presentation.gallery.GalleryScreen
 import com.madcamp.phonebook.presentation.gallery.ImageDetailScreen
+import com.madcamp.phonebook.presentation.journal.JournalBeginScreen
+import com.madcamp.phonebook.presentation.journal.JournalWritingScreen
 
 
 @RequiresApi(Build.VERSION_CODES.R)
@@ -25,7 +28,8 @@ import com.madcamp.phonebook.presentation.gallery.ImageDetailScreen
 fun NavGraph(
     activity: ComponentActivity,
     contactViewModel: ContactViewModel,
-    favoriteList: MutableList<favorites>
+    favoriteList: MutableList<favorites>,
+    favoriteViewModel: FavoriteViewModel
 ) {
     val screen = Screen()
     val navController = rememberNavController()
@@ -54,12 +58,20 @@ fun NavGraph(
             )
         }
         composable(screen.GalleryScreen){
-            GalleryScreen(navController, favoriteList)
+            GalleryScreen(navController, favoriteList, favoriteViewModel)
         }
 
         composable(screen.ImageDetailScreen+"/{index}", arguments = listOf(navArgument("index") { type = NavType.IntType })) { backStackEntry ->
             val index = backStackEntry.arguments?.getInt("index") ?: -1
             ImageDetailScreen(navController, favoriteList, favoriteList[index])
+        }
+
+        composable(screen.JournalBeginScreen){
+            JournalBeginScreen(navController, favoriteList, favoriteViewModel)
+        }
+
+        composable(screen.JournalWritingScreen){
+            JournalWritingScreen(navController = navController, favoriteList = favoriteList, favoriteViewModel)
         }
 
     }

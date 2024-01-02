@@ -23,38 +23,27 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.room.Room
 import com.madcamp.phonebook.presentation.gallery.component.SearchImage
 import com.madcamp.phonebook.presentation.gallery.component.ShowGalleryOnScreen
-import com.madcamp.phonebook.MainActivity.favorites
+import com.madcamp.phonebook.domain.model.Contact
+import com.madcamp.phonebook.presentation.database.AppDatabase
+import com.madcamp.phonebook.presentation.database.FavoriteViewModel
+import com.madcamp.phonebook.presentation.database.Favorites
+import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 
 @RequiresApi(Build.VERSION_CODES.R)
 @Composable
-fun GalleryScreen(navController: NavController, favoritelist: MutableList<favorites>){
+fun GalleryScreen(navController: NavController, favoritelist: MutableList<favorites>, favoriteViewModel: FavoriteViewModel){
 
     var permFlag by remember{ mutableStateOf(false) } // Does permission flag is on or not?
     var permIsGrantedFlag by remember{ mutableStateOf(false) } // Does check is granted or not?
     var permPrecheckedFlag by remember{ mutableStateOf(false) }  // Onclick makes authority check and make pre_checked.
     var storageAccessFlag by remember{ mutableStateOf(false) }  // Onclick makes image accessing.
     var imageUri by remember { mutableStateOf<Uri?>(null) }
-
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()) {
-            uri: Uri? ->
-        imageUri = uri
-        imageUri?.let {
-            favoritelist.add(favorites("#Favorite", imageUri, false, "description...", true))
-        }
-        storageAccessFlag = false
-    }
-
-    val write_external_storage_launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = {
-                isGranted -> permIsGrantedFlag = isGranted
-        }
-    )
 
 
     Column(
@@ -74,47 +63,13 @@ fun GalleryScreen(navController: NavController, favoritelist: MutableList<favori
 
                 item {
 
-                    ShowGalleryOnScreen(navController, favoritelist = favoritelist)
+                    ShowGalleryOnScreen(navController, favoritelist = favoritelist, favoriteViewModel)
 
                 }
             }
         }
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .weight(1f)
-                .offset(y = (-5).dp),
-            contentAlignment = Alignment.BottomCenter
-        ) {
-            FilledTonalButton(
 
-                onClick = {
-                    permFlag = true
-                    storageAccessFlag = true
-
-                },
-
-            ) {
-                Text("Add New Image")
-            }
-
-            if (permFlag && (!permPrecheckedFlag)) {
-                write_external_storage_launcher.launch(
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                )
-                permFlag = false
-                permPrecheckedFlag = true
-            }
-
-            if (permIsGrantedFlag) {
-                if (storageAccessFlag) {
-                    SideEffect {
-                        launcher.launch("image/*")
-                    }
-                }
-            }
 
         }
     }
-}

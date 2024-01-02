@@ -29,12 +29,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.madcamp.phonebook.MainActivity
+import com.madcamp.phonebook.presentation.database.Favorites
+import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 
 
 // Get an image name from user.
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun ShowImageInformation(favorite: MainActivity.favorites, favorite_list: MutableList<MainActivity.favorites>){
+fun ShowImageInformation(favorite: favorites, favorite_list: MutableList<favorites>){
 
     var clickFlag by remember{ mutableStateOf(false) }
     var text by remember { mutableStateOf("Edit") }

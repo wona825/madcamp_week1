@@ -3,6 +3,7 @@ package com.madcamp.phonebook.presentation.gallery.component
 import android.content.Context
 import android.os.Build
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
@@ -16,43 +17,77 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.madcamp.phonebook.MainActivity
+import com.madcamp.phonebook.presentation.database.FavoriteViewModel
+import com.madcamp.phonebook.presentation.database.Favorites
+import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 
 
 @RequiresApi(Build.VERSION_CODES.R)
 @Composable
-fun ShowGalleryOnScreen(navController: NavController, favoritelist: MutableList<MainActivity.favorites>){
-    for (index in favoritelist.indices step 3) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            //horizontalArrangement = Arrangement.SpaceBetween // Arrange child elements with even space
-        ) {
+fun ShowGalleryOnScreen(navController: NavController, favoritelist: MutableList<favorites>, favoriteViewModel: FavoriteViewModel){
 
+//        var localFavoriteList: MutableList<Favorites> =  mutableListOf<Favorites>()
+//
+//        favoriteViewModel.getAllFavorites{
+//            favorites ->
+//            favorites.forEach{
+//                favorite -> localFavoriteList.add(favorite)
+//            }
+//        }
+//
+//        val size = localFavoriteList.size
 
-            favoritelist.removeAll { it.valid == false } // Remove all invalid data.
+        //Log.d("The number", "Size is $size")
 
-            // Elem1 (Item)
-            ShowItemOnScreen(
-                navController,
-                favorite = favoritelist[index],
-                favorite_list = favoritelist
-            )
+        for (index in favoritelist.indices step 3) {
 
-            // Elem2. Second Item
-            if ((index + 1) == favoritelist.size) {
-                // do nothing
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                //horizontalArrangement = Arrangement.SpaceBetween // Arrange child elements with even space
+            ) {
 
-            } else if ((index + 2) == favoritelist.size) {
-                ShowItemOnScreen(navController, favorite = favoritelist[index + 1], favorite_list = favoritelist)
-            } else {
-                ShowItemOnScreen(navController, favorite = favoritelist[index + 1], favorite_list = favoritelist)
-                ShowItemOnScreen(navController, favorite = favoritelist[index + 2], favorite_list = favoritelist)
-            }
+                favoritelist.removeAll { it.valid == false } // Remove all invalid data.
+
+                // Elem1 (Item)
+                ShowItemOnScreen(
+                    navController,
+                    favorite = favoritelist[index],
+                    favorite_list = favoritelist
+                )
+
+                // Elem2. Second Item
+                if ((index + 1) == favoritelist.size) {
+                    // do nothing
+
+                } else if ((index + 2) == favoritelist.size) {
+                    ShowItemOnScreen(
+                        navController,
+                        favorite = favoritelist[index + 1],
+                        favorite_list = favoritelist
+                    )
+                } else {
+                    ShowItemOnScreen(
+                        navController,
+                        favorite = favoritelist[index + 1],
+                        favorite_list = favoritelist
+                    )
+                    ShowItemOnScreen(
+                        navController,
+                        favorite = favoritelist[index + 2],
+                        favorite_list = favoritelist
+                    )
+                }
+
 
         }
     }
@@ -62,7 +97,7 @@ fun ShowGalleryOnScreen(navController: NavController, favoritelist: MutableList<
 // Show each item on the screen. Each item consists of image and the description. (2 elements)
 @RequiresApi(Build.VERSION_CODES.R)
 @Composable
-fun ShowItemOnScreen(navController: NavController, favorite: MainActivity.favorites, favorite_list: MutableList<MainActivity.favorites>){
+fun ShowItemOnScreen(navController: NavController, favorite: favorites, favorite_list: MutableList<favorites>){
 
     val screenWidth = (getScreenWidth(LocalContext.current).toDouble() / 3).toInt()
 

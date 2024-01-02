@@ -2,6 +2,7 @@ package com.madcamp.phonebook.presentation.gallery.component
 
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
+import android.media.ExifInterface
 import android.os.Build
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
@@ -20,17 +21,24 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.madcamp.phonebook.MainActivity
 import com.madcamp.phonebook.navigation.Screen
+import com.madcamp.phonebook.presentation.database.FavoriteViewModel
+import com.madcamp.phonebook.presentation.database.Favorites
+import com.madcamp.phonebook.presentation.gallery.favorites.favorites
+import java.io.IOException
 
 // Show each image on the screen.
 @RequiresApi(Build.VERSION_CODES.R)
 @Composable
-fun ShowImage(navController:NavController, favorite: MainActivity.favorites, favorite_list: MutableList<MainActivity.favorites>){
+fun ShowImage(navController:NavController, favorite: favorites, favorite_list: MutableList<favorites>){
 
     val bitmap = remember { mutableStateOf<Bitmap?>(null) }
     val imageUri = favorite.image
+    val indexOfFavorite = favorite_list.indexOf(favorite)
+
     val context = LocalContext.current
     val screen = Screen()
     val screenWidth = ((getScreenWidth(LocalContext.current).toDouble()) / 3).toInt()
+    val exif: ExifInterface?
 
     imageUri?.let {
         if (Build.VERSION.SDK_INT < 28) {
@@ -40,6 +48,18 @@ fun ShowImage(navController:NavController, favorite: MainActivity.favorites, fav
             val source = ImageDecoder.createSource(context.contentResolver, it)
             bitmap.value = ImageDecoder.decodeBitmap(source)
         }
+
+
+        exif = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ExifInterface(context.contentResolver.openInputStream(imageUri)!!)
+        } else {
+            ExifInterface(imageUri.path!!)
+        }
+            
+        // Get the time when the image is pictured.
+        favorite_list[indexOfFavorite].dateTime = exif.getAttribute(ExifInterface.TAG_DATETIME)
+        
+
         bitmap.value?.let {btm ->
             Image(
                 bitmap = btm.asImageBitmap(),
@@ -49,10 +69,8 @@ fun ShowImage(navController:NavController, favorite: MainActivity.favorites, fav
                     .width(screenWidth.dp)
                     .height(screenWidth.dp)
                     .clickable {
-                        val this_index = favorite_list.indexOf(favorite)
-                        navController.navigate(screen.ImageDetailScreen + "/${this_index}")
+                        navController.navigate(screen.ImageDetailScreen + "/${indexOfFavorite}")
                     }
-
             )
         }
     }

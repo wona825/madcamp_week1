@@ -28,14 +28,17 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -51,7 +54,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.madcamp.phonebook.MainActivity.favorites
+import com.madcamp.phonebook.presentation.gallery.favorites.favorites
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -63,9 +67,10 @@ fun ImageDetailScreen(navController: NavHostController, favorite_list: MutableLi
     var name by remember { mutableStateOf("#Favorite") }
     val keyboardController = LocalSoftwareKeyboardController.current
     val indexOfFavorite = favorite_list.indexOf(favorite)
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
-        modifier = Modifier.padding(3.dp)
+        modifier = Modifier.padding(20.dp)
     ) {
 
         // 1st Line
@@ -146,7 +151,42 @@ fun ImageDetailScreen(navController: NavHostController, favorite_list: MutableLi
             }
         }
 
-        // 3rd Line
+        // 3rd Line, Time and Place
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(0.8f)
+                .background(Color.White)
+                .align(Alignment.CenterHorizontally)
+        ) {
+            Row() {
+
+                // dateTime
+                Box(
+                    modifier = Modifier.weight(5f),
+                    contentAlignment = Alignment.CenterStart
+
+                ){
+                    favorite.dateTime?.let {
+
+                        val dateAndTime = it.split(" ")
+                        val timeData = dateAndTime[0].replace(":", "/")
+
+                        Text(
+                            fontSize = 20.sp,
+                            text = timeData,
+                            color = Color.Gray,
+                            modifier = Modifier
+                                .fillMaxSize()
+
+                        )
+                    }
+                }
+            }
+        }
+
+
+        // 4th Line
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -193,7 +233,10 @@ fun ImageDetailScreen(navController: NavHostController, favorite_list: MutableLi
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .background(color = Color.White, shape = RoundedCornerShape(size = 16.dp))
+                                        .background(
+                                            color = Color.White,
+                                            shape = RoundedCornerShape(size = 16.dp)
+                                        )
                                         .padding(all = 5.dp),
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
@@ -229,6 +272,7 @@ fun ImageDetailScreen(navController: NavHostController, favorite_list: MutableLi
                         .clickable {
                             favorite_list[indexOfFavorite].love = !(favorite.love)
                         }
+                        .background(Color.White)
                 ){
                     Icon(
                         imageVector = if (favorite.love) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
@@ -241,7 +285,7 @@ fun ImageDetailScreen(navController: NavHostController, favorite_list: MutableLi
             }
         }
 
-        // 4th Line, Description
+        // 5th Line, Description
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -308,6 +352,7 @@ fun ImageDetailScreen(navController: NavHostController, favorite_list: MutableLi
                 )
             }
         }
+
     }
 
 }
