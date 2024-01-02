@@ -1,4 +1,4 @@
-package com.madcamp.phonebook.presentation.Diary
+package com.madcamp.phonebook.presentation.diary
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.madcamp.phonebook.navigation.Screen
-import com.madcamp.phonebook.presentation.Diary.component.ShowIconForEachDay
+import com.madcamp.phonebook.presentation.diary.component.ShowIconForEachDay
 import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

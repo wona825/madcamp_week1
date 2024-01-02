@@ -1,5 +1,6 @@
 package com.madcamp.phonebook.presentation.component
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.madcamp.phonebook.ui.theme.Brown400
 import com.madcamp.phonebook.ui.theme.Gray400
 
 @Composable
@@ -34,7 +36,8 @@ fun TextBox(
             .width(width)
             .height(height)
             .padding(0.dp)
-            .clickable { onClick() },
+            .clickable { onClick() }
+            .border(1.dp, Brown400, RoundedCornerShape(20)),
         textStyle = TextStyle(fontSize = fontSize.sp, fontWeight = FontWeight.Bold),
         value = text,
         onValueChange = onValueChange,
