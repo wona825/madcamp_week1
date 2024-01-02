@@ -25,9 +25,7 @@ import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.madcamp.phonebook.presentation.contact.ContactListScreen
-import com.madcamp.phonebook.presentation.database.FavoriteViewModel
 import com.madcamp.phonebook.presentation.gallery.favorites.favorites
-import com.madcamp.phonebook.MainActivity.favorites
 import com.madcamp.phonebook.presentation.contact.viewModel.ContactViewModel
 import com.madcamp.phonebook.presentation.gallery.GalleryScreen
 import com.madcamp.phonebook.presentation.journal.JournalBeginScreen
@@ -41,8 +39,7 @@ import kotlinx.coroutines.launch
 fun TabLayout(
     ContactViewModel: ContactViewModel,
     favoriteList: MutableList<favorites>,
-    navController: NavController,
-    favoriteViewModel: FavoriteViewModel
+    navController: NavController
 ) {
     val pagerState = rememberPagerState(pageCount = 3)
 
@@ -66,7 +63,7 @@ fun TabLayout(
             }
         }
         Tabs(pagerState = pagerState)
-        TabsContent(pagerState = pagerState, ContactViewModel = ContactViewModel, favoriteList, navController = navController, favoriteViewModel)
+        TabsContent(pagerState = pagerState, ContactViewModel = ContactViewModel, favoriteList, navController = navController)
     }
 }
 
@@ -121,15 +118,14 @@ fun TabsContent(
     ContactViewModel: ContactViewModel,
     favoriteList: MutableList<favorites>,
     navController: NavController,
-    favoriteViewModel: FavoriteViewModel,
     onClick: () -> Unit = {}
 ) {
 
     HorizontalPager(state = pagerState) { page ->
         when (page) {
             0 -> ContactListScreen(navController, ContactViewModel)
-            1 -> GalleryScreen(navController = navController, favoritelist = favoriteList, favoriteViewModel)
-            2 -> JournalBeginScreen(navController = navController, favoriteList = favoriteList, favoriteViewModel)
+            1 -> GalleryScreen(navController = navController, favoritelist = favoriteList)
+            2 -> JournalBeginScreen(navController = navController, favoriteList = favoriteList)
         }
     }
 }

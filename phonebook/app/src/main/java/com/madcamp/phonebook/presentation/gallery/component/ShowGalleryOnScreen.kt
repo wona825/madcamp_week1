@@ -27,14 +27,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.madcamp.phonebook.MainActivity
-import com.madcamp.phonebook.presentation.database.FavoriteViewModel
-import com.madcamp.phonebook.presentation.database.Favorites
 import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 
 
 @RequiresApi(Build.VERSION_CODES.R)
 @Composable
-fun ShowGalleryOnScreen(navController: NavController, favoritelist: MutableList<favorites>, favoriteViewModel: FavoriteViewModel){
+fun ShowGalleryOnScreen(navController: NavController, favoritelist: MutableList<favorites>){
 
 //        var localFavoriteList: MutableList<Favorites> =  mutableListOf<Favorites>()
 //

@@ -64,8 +64,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.madcamp.phonebook.R
-import com.madcamp.phonebook.presentation.database.FavoriteViewModel
-import com.madcamp.phonebook.presentation.database.Favorites
 import com.madcamp.phonebook.presentation.gallery.component.getScreenWidth
 import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 import java.time.LocalDate
@@ -74,7 +72,7 @@ import java.time.format.DateTimeFormatter
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun JournalWritingScreen(navController: NavController, favoriteList: MutableList<favorites>, favoriteViewModel: FavoriteViewModel){
+fun JournalWritingScreen(navController: NavController, favoriteList: MutableList<favorites>){
 
     var permFlag by remember{ mutableStateOf(false) } // Does permission flag is on or not?
     var permIsGrantedFlag by remember{ mutableStateOf(false) } // Does check is granted or not?
@@ -241,7 +239,7 @@ fun JournalWritingScreen(navController: NavController, favoriteList: MutableList
                 .padding(10.dp)
         ) {
             LazyColumn(
-                contentPadding = PaddingValues(10.dp, 10.dp)
+                contentPadding = PaddingValues(30.dp, 30.dp)
             ) {
 
                 item {

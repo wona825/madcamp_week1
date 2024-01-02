@@ -14,7 +14,6 @@ import com.madcamp.phonebook.presentation.contact.ContactDetailScreen
 import com.madcamp.phonebook.presentation.contact.ContactListScreen
 import com.madcamp.phonebook.presentation.contact.viewModel.ContactViewModel
 import com.madcamp.phonebook.presentation.TabLayout
-import com.madcamp.phonebook.presentation.database.FavoriteViewModel
 import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 import com.madcamp.phonebook.presentation.gallery.GalleryScreen
 import com.madcamp.phonebook.presentation.gallery.ImageDetailScreen
@@ -28,8 +27,7 @@ import com.madcamp.phonebook.presentation.journal.JournalWritingScreen
 fun NavGraph(
     activity: ComponentActivity,
     contactViewModel: ContactViewModel,
-    favoriteList: MutableList<favorites>,
-    favoriteViewModel: FavoriteViewModel
+    favoriteList: MutableList<favorites>
 ) {
     val screen = Screen()
     val navController = rememberNavController()
@@ -58,7 +56,7 @@ fun NavGraph(
             )
         }
         composable(screen.GalleryScreen){
-            GalleryScreen(navController, favoriteList, favoriteViewModel)
+            GalleryScreen(navController, favoriteList)
         }
 
         composable(screen.ImageDetailScreen+"/{index}", arguments = listOf(navArgument("index") { type = NavType.IntType })) { backStackEntry ->
@@ -67,11 +65,11 @@ fun NavGraph(
         }
 
         composable(screen.JournalBeginScreen){
-            JournalBeginScreen(navController, favoriteList, favoriteViewModel)
+            JournalBeginScreen(navController, favoriteList)
         }
 
         composable(screen.JournalWritingScreen){
-            JournalWritingScreen(navController = navController, favoriteList = favoriteList, favoriteViewModel)
+            JournalWritingScreen(navController = navController, favoriteList = favoriteList)
         }
 
     }

@@ -15,12 +15,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.madcamp.phonebook.navigation.Screen
-import com.madcamp.phonebook.presentation.database.FavoriteViewModel
 import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 import com.madcamp.phonebook.ui.theme.Blue400
 
 @Composable
-fun JournalBeginScreen(navController: NavController, favoriteList: MutableList<favorites>, favoriteViewModel: FavoriteViewModel){
+fun JournalBeginScreen(navController: NavController, favoriteList: MutableList<favorites>){
 
     val screen = Screen()
 

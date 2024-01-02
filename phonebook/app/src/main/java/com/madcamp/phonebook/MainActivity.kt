@@ -24,9 +24,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import com.madcamp.phonebook.domain.model.Contact
 import com.madcamp.phonebook.navigation.NavGraph
-import com.madcamp.phonebook.presentation.contact.viewmodel.ContactViewModel
-import com.madcamp.phonebook.presentation.database.FavoriteViewModel
-import com.madcamp.phonebook.presentation.database.Favorites
 import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 import com.madcamp.phonebook.presentation.contact.viewModel.ContactViewModel
 import com.madcamp.phonebook.ui.theme.PhonebookTheme
@@ -37,7 +34,6 @@ class MainActivity : ComponentActivity(), ContactViewModel.PhoneCallListener, Co
 
     private var getlist: MutableList<favorites> =  mutableListOf<favorites>()  // list of favorites
 
-    private lateinit var favoriteViewModel: FavoriteViewModel
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?)
@@ -49,12 +45,10 @@ class MainActivity : ComponentActivity(), ContactViewModel.PhoneCallListener, Co
         contactViewModel.phoneCallListener = this
         contactViewModel.sendMessageListener = this
 
-        favoriteViewModel = ViewModelProvider(this).get(FavoriteViewModel::class.java)
-        favoriteViewModel.createDatabase(this)
 
         setContent {
             PhonebookTheme {
-                NavGraph(activity = this, contactViewModel = contactViewModel, favoriteList = getlist, favoriteViewModel = favoriteViewModel)
+                NavGraph(activity = this, contactViewModel = contactViewModel, favoriteList = getlist)
             }
         }
 
