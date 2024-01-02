@@ -1,9 +1,8 @@
-package com.madcamp.phonebook.presentation.gallery.component
+package com.madcamp.phonebook.presentation.gallery
 
 import android.Manifest
 import android.net.Uri
 import android.os.Build
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -26,18 +25,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.madcamp.phonebook.Gallery_Navigation.Gallery_Tab.Gallery_Screen.SearchTab
-import com.madcamp.phonebook.Gallery_Navigation.Gallery_Tab.Gallery_Screen.Show_Gallery_Image
+import com.madcamp.phonebook.presentation.gallery.component.SearchImage
+import com.madcamp.phonebook.presentation.gallery.component.ShowGalleryOnScreen
 import com.madcamp.phonebook.MainActivity.favorites
 
 @RequiresApi(Build.VERSION_CODES.R)
 @Composable
-fun Gallery_Tab(navController: NavController, favoritelist: MutableList<favorites>){
+fun GalleryScreen(navController: NavController, favoritelist: MutableList<favorites>){
 
-    var Perm_flag by remember{ mutableStateOf(false) } // Does permission flag is on or not?
-    var Check_isGranted by remember{ mutableStateOf(false) } // Does check is granted or not?
-    var pre_checked by remember{ mutableStateOf(false) }  // Onclick makes authority check and make pre_checked.
-    var add_image by remember{ mutableStateOf(false) }  // Onclick makes image accessing.
+    var permFlag by remember{ mutableStateOf(false) } // Does permission flag is on or not?
+    var permIsGrantedFlag by remember{ mutableStateOf(false) } // Does check is granted or not?
+    var permPrecheckedFlag by remember{ mutableStateOf(false) }  // Onclick makes authority check and make pre_checked.
+    var storageAccessFlag by remember{ mutableStateOf(false) }  // Onclick makes image accessing.
     var imageUri by remember { mutableStateOf<Uri?>(null) }
 
     val launcher = rememberLauncherForActivityResult(
@@ -45,16 +44,15 @@ fun Gallery_Tab(navController: NavController, favoritelist: MutableList<favorite
             uri: Uri? ->
         imageUri = uri
         imageUri?.let {
-            favoritelist.add(favorites("#Favorite", imageUri))
+            favoritelist.add(favorites("#Favorite", imageUri, false, "description...", true))
         }
-        Log.d("add", "add: $favoritelist")
-        add_image = false
+        storageAccessFlag = false
     }
 
     val write_external_storage_launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = {
-                isGranted -> Check_isGranted = isGranted
+                isGranted -> permIsGrantedFlag = isGranted
         }
     )
 
@@ -64,7 +62,7 @@ fun Gallery_Tab(navController: NavController, favoritelist: MutableList<favorite
             .fillMaxSize()
             .padding(0.dp)
     ){
-        SearchTab(favoritelist = favoritelist)
+        SearchImage(favoritelist = favoritelist)
 
 
         Box(
@@ -76,7 +74,7 @@ fun Gallery_Tab(navController: NavController, favoritelist: MutableList<favorite
 
                 item {
 
-                    Show_Gallery_Image(navController, favoritelist = favoritelist)
+                    ShowGalleryOnScreen(navController, favoritelist = favoritelist)
 
                 }
             }
@@ -92,8 +90,8 @@ fun Gallery_Tab(navController: NavController, favoritelist: MutableList<favorite
             FilledTonalButton(
 
                 onClick = {
-                    Perm_flag = true
-                    add_image = true
+                    permFlag = true
+                    storageAccessFlag = true
 
                 },
 
@@ -101,16 +99,16 @@ fun Gallery_Tab(navController: NavController, favoritelist: MutableList<favorite
                 Text("Add New Image")
             }
 
-            if (Perm_flag && (!pre_checked)) {
+            if (permFlag && (!permPrecheckedFlag)) {
                 write_external_storage_launcher.launch(
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
                 )
-                Perm_flag = false
-                pre_checked = true
+                permFlag = false
+                permPrecheckedFlag = true
             }
 
-            if (Check_isGranted) {
-                if (add_image) {
+            if (permIsGrantedFlag) {
+                if (storageAccessFlag) {
                     SideEffect {
                         launcher.launch("image/*")
                     }

@@ -24,12 +24,13 @@ import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.madcamp.phonebook.presentation.contact.ContactListScreen
-import com.madcamp.phonebook.presentation.gallery.component.Gallery_Tab
 import com.madcamp.phonebook.MainActivity.favorites
 import com.madcamp.phonebook.presentation.contact.viewModel.ContactViewModel
+import com.madcamp.phonebook.presentation.gallery.GalleryScreen
 import com.madcamp.phonebook.ui.theme.Blue400
 import kotlinx.coroutines.launch
 
+@RequiresApi(Build.VERSION_CODES.R)
 @ExperimentalPagerApi
 @Composable
 fun TabLayout(

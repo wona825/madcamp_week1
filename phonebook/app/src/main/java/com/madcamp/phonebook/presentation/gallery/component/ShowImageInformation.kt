@@ -1,4 +1,4 @@
-package com.madcamp.phonebook.Gallery_Navigation.Gallery_Tab.Gallery_Screen
+package com.madcamp.phonebook.presentation.gallery.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,27 +34,27 @@ import com.madcamp.phonebook.MainActivity
 // Get an image name from user.
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun get_image_name(favorite: MainActivity.favorites, favorite_list: MutableList<MainActivity.favorites>){
+fun ShowImageInformation(favorite: MainActivity.favorites, favorite_list: MutableList<MainActivity.favorites>){
 
-    var Click_Flag by remember{ mutableStateOf(false) }
+    var clickFlag by remember{ mutableStateOf(false) }
     var text by remember { mutableStateOf("Edit") }
     val keyboardController = LocalSoftwareKeyboardController.current
-    val index_getlist = favorite_list.indexOf(favorite)
-    val screen_width = ((getScreenWidth(LocalContext.current).toDouble()) / 3).toInt()
+    val indexOfFavorite = favorite_list.indexOf(favorite)
+    val screenWidth = ((getScreenWidth(LocalContext.current).toDouble()) / 3).toInt()
 
     Box(
         modifier = Modifier
-            .background(if (Click_Flag) Color.White else Color.White)
+            .background(if (clickFlag) Color.White else Color.White)
             .clickable {
-                Click_Flag = !Click_Flag
-                if (Click_Flag) {
+                clickFlag = !clickFlag
+                if (clickFlag) {
                     keyboardController?.show()
                 }
             }
-            .width(screen_width.dp)
+            .width(screenWidth.dp)
             .padding(top = 3.dp, bottom = 3.dp)
     ){
-        if(Click_Flag){
+        if(clickFlag){
             TextField(
                 textStyle = TextStyle(fontSize = 15.sp),
                 value = text,
@@ -65,9 +66,8 @@ fun get_image_name(favorite: MainActivity.favorites, favorite_list: MutableList<
                 ),
                 keyboardActions = KeyboardActions(
                     onDone = {
-                        // Handle the "Done" action
-                        Click_Flag = !Click_Flag
-                        favorite_list[index_getlist].name = "#" + text
+                        clickFlag = !clickFlag
+                        favorite_list[indexOfFavorite].name = "#" + text
                         keyboardController?.hide()
                     }
                 ),
@@ -82,8 +82,9 @@ fun get_image_name(favorite: MainActivity.favorites, favorite_list: MutableList<
                 fontSize = 15.sp,
                 text = favorite.name,
                 color = Color.Black,
+                fontWeight = FontWeight.Bold,
                 modifier = Modifier
-                    .widthIn(max = screen_width.dp)
+                    .widthIn(max = screenWidth.dp)
                     .heightIn(max = 20.dp)
 
             )
