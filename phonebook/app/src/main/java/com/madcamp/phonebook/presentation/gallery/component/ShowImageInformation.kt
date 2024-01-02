@@ -29,7 +29,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.madcamp.phonebook.MainActivity
-import com.madcamp.phonebook.presentation.database.Favorites
 import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 
 

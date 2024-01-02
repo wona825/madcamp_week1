@@ -26,18 +26,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.room.Room
 import com.madcamp.phonebook.presentation.gallery.component.SearchImage
 import com.madcamp.phonebook.presentation.gallery.component.ShowGalleryOnScreen
 import com.madcamp.phonebook.domain.model.Contact
-import com.madcamp.phonebook.presentation.database.AppDatabase
-import com.madcamp.phonebook.presentation.database.FavoriteViewModel
-import com.madcamp.phonebook.presentation.database.Favorites
 import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 
 @RequiresApi(Build.VERSION_CODES.R)
 @Composable
-fun GalleryScreen(navController: NavController, favoritelist: MutableList<favorites>, favoriteViewModel: FavoriteViewModel){
+fun GalleryScreen(navController: NavController, favoritelist: MutableList<favorites>){
 
     var permFlag by remember{ mutableStateOf(false) } // Does permission flag is on or not?
     var permIsGrantedFlag by remember{ mutableStateOf(false) } // Does check is granted or not?
@@ -63,7 +59,7 @@ fun GalleryScreen(navController: NavController, favoritelist: MutableList<favori
 
                 item {
 
-                    ShowGalleryOnScreen(navController, favoritelist = favoritelist, favoriteViewModel)
+                    ShowGalleryOnScreen(navController, favoritelist = favoritelist)
 
                 }
             }
