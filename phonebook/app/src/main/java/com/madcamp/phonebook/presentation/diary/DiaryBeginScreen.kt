@@ -22,85 +22,85 @@ fun DiaryBeginScreen(navController: NavController, favoriteList: MutableList<fav
     val screen = Screen()
 
     Box(){
-      Column(){
+        Column(){
 
-          // Empty Space
-          Box(
-              modifier = Modifier
-                  .weight(3f)
-                  .fillMaxSize(),
-          ){
+            // Empty Space
+            Box(
+                modifier = Modifier
+                    .weight(3f)
+                    .fillMaxSize(),
+            ){
 
-          }
+            }
 
-          // Big Title
-          Box(
-              modifier = Modifier
-                  .weight(3f)
-                  .fillMaxSize(),
-          ){
-              Text(
-                  text = "당신의 오늘은 어땠나요?",
-                  fontSize = 35.sp,
-                  color = Color.Black,
-                  fontWeight = FontWeight.Bold,
-                  textAlign = TextAlign.Center,
-              )
-          }
+            // Big Title
+            Box(
+                modifier = Modifier
+                    .weight(3f)
+                    .fillMaxSize(),
+            ){
+                Text(
+                    text = "당신의 오늘은 어땠나요?",
+                    fontSize = 35.sp,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                )
+            }
 
-          // Small Title
-          Box(
-              modifier = Modifier
-                  .weight(2f)
-                  .fillMaxSize(),
-          ){
-              val quoteList = listOf("\"아프니까 청춘이다.\" - 김난도", "\"하루라도 책을 읽지 않으면 입안에 가시가 돋는다.\" - 안중근")
+            // Small Title
+            Box(
+                modifier = Modifier
+                    .weight(2f)
+                    .fillMaxSize(),
+            ){
+                val quoteList = listOf("\"아프니까 청춘이다.\" - 김난도", "\"하루라도 책을 읽지 않으면 입안에 가시가 돋는다.\" - 안중근")
 
-              Text(
-                  text = quoteList.random() ,
-                  fontSize = 15.sp,
-                  color = Color.Gray,
-                  textAlign = TextAlign.Center,
-                  modifier = Modifier.align(Alignment.TopCenter)
-              )
-          }
+                Text(
+                    text = quoteList.random() ,
+                    fontSize = 15.sp,
+                    color = Color.Gray,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.align(Alignment.TopCenter)
+                )
+            }
 
-          // Empty Space
-          Box(
-              modifier = Modifier
-                  .weight(3f)
-                  .fillMaxSize(),
-          ){
+            // Empty Space
+            Box(
+                modifier = Modifier
+                    .weight(3f)
+                    .fillMaxSize(),
+            ){
 
-          }
+            }
 
-          // Button to write a journal
-          Box(
-              modifier = Modifier
-                  .weight(1f)
-                  .fillMaxSize(),
-              contentAlignment = Alignment.Center
-          ){
-              FilledTonalButton(
+            // Button to write a journal
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ){
+                FilledTonalButton(
 
-                  onClick = {
+                    onClick = {
                         navController.navigate(screen.DiaryWritingScreen)
-                  },
-                  modifier = Modifier.align(Alignment.Center)
+                    },
+                    modifier = Modifier.align(Alignment.Center)
 
-                  ) {
-                  Text("소중한 오늘 기록하기")
-              }
-          }
+                ) {
+                    Text("소중한 오늘 기록하기")
+                }
+            }
 
-          // Empty Space
-          Box(
-              modifier = Modifier
-                  .weight(1f)
-          ){
+            // Empty Space
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+            ){
 
-          }
+            }
 
-      }
+        }
     }
 }

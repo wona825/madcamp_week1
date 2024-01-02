@@ -18,7 +18,7 @@ import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 import com.madcamp.phonebook.presentation.gallery.GalleryScreen
 import com.madcamp.phonebook.presentation.gallery.ImageDetailScreen
 import com.madcamp.phonebook.presentation.diary.DiaryBeginScreen
-import com.madcamp.phonebook.presentation.diary.DiaryWritingScreen
+import com.madcamp.phonebook.presentation.DiaryWritingScreen
 
 
 @RequiresApi(Build.VERSION_CODES.R)

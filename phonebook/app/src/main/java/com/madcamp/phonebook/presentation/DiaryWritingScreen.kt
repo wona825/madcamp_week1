@@ -1,4 +1,4 @@
-package com.madcamp.phonebook.presentation.diary
+package com.madcamp.phonebook.presentation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
