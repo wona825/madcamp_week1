@@ -1,4 +1,4 @@
-package com.madcamp.phonebook.presentation.contact.component
+package com.madcamp.phonebook.presentation.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -26,7 +26,8 @@ fun TextBox(
     onValueChange: (String) -> Unit = {},
     boxColor: Color,
     textColor: Color = Color.Black,
-    readOnly: Boolean
+    readOnly: Boolean,
+    fontSize: Int = 22
 ) {
     TextField(
         modifier = Modifier
@@ -34,7 +35,7 @@ fun TextBox(
             .height(height)
             .padding(0.dp)
             .clickable { onClick() },
-        textStyle = TextStyle(fontSize = 22.sp, fontWeight = FontWeight.Bold),
+        textStyle = TextStyle(fontSize = fontSize.sp, fontWeight = FontWeight.Bold),
         value = text,
         onValueChange = onValueChange,
         singleLine = true,

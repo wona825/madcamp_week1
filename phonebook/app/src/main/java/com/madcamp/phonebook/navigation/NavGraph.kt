@@ -17,8 +17,8 @@ import com.madcamp.phonebook.presentation.TabLayout
 import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 import com.madcamp.phonebook.presentation.gallery.GalleryScreen
 import com.madcamp.phonebook.presentation.gallery.ImageDetailScreen
-import com.madcamp.phonebook.presentation.journal.JournalBeginScreen
-import com.madcamp.phonebook.presentation.journal.JournalWritingScreen
+import com.madcamp.phonebook.presentation.diary.DiaryBeginScreen
+import com.madcamp.phonebook.presentation.DiaryWritingScreen
 
 
 @RequiresApi(Build.VERSION_CODES.R)
@@ -64,12 +64,12 @@ fun NavGraph(
             ImageDetailScreen(navController, favoriteList, favoriteList[index])
         }
 
-        composable(screen.JournalBeginScreen){
-            JournalBeginScreen(navController, favoriteList)
+        composable(screen.DiaryBeginScreen){
+            DiaryBeginScreen(navController, favoriteList)
         }
 
-        composable(screen.JournalWritingScreen){
-            JournalWritingScreen(navController = navController, favoriteList = favoriteList)
+        composable(screen.DiaryWritingScreen){
+            DiaryWritingScreen(navController = navController, favoriteList = favoriteList, contactViewModel = contactViewModel)
         }
 
     }

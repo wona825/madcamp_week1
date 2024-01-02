@@ -1,4 +1,4 @@
-package com.madcamp.phonebook.presentation.contact.component
+package com.madcamp.phonebook.presentation.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.size
