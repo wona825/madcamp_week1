@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.*
@@ -25,8 +26,11 @@ import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.madcamp.phonebook.domain.model.Contact
 import com.madcamp.phonebook.presentation.contact.ContactListScreen
-import com.madcamp.phonebook.MainActivity.favorites
+import com.madcamp.phonebook.presentation.database.FavoriteViewModel
+import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 import com.madcamp.phonebook.presentation.gallery.GalleryScreen
+import com.madcamp.phonebook.presentation.journal.JournalBeginScreen
+import com.madcamp.phonebook.presentation.journal.JournalWritingScreen
 import com.madcamp.phonebook.ui.theme.Blue400
 import kotlinx.coroutines.launch
 
@@ -36,7 +40,8 @@ import kotlinx.coroutines.launch
 fun TabLayout(
     contactList: List<Contact>,
     favoriteList: MutableList<favorites>,
-    navController: NavController
+    navController: NavController,
+    favoriteViewModel: FavoriteViewModel
 ) {
     val pagerState = rememberPagerState(pageCount = 3)
 
@@ -60,7 +65,7 @@ fun TabLayout(
             }
         }
         Tabs(pagerState = pagerState)
-        TabsContent(pagerState = pagerState, contactList = contactList, favoriteList, navController = navController)
+        TabsContent(pagerState = pagerState, contactList = contactList, favoriteList, navController = navController, favoriteViewModel)
     }
 }
 
@@ -70,7 +75,7 @@ fun Tabs(pagerState: PagerState) {
     val list = listOf(
         "Friends" to Icons.Default.Call,
         "Favorites" to Icons.Default.Favorite,
-        "Settings" to Icons.Default.Settings
+        "Journal" to Icons.Default.Edit
     )
     val scope = rememberCoroutineScope()
     TabRow(
@@ -115,14 +120,15 @@ fun TabsContent(
     contactList: List<Contact>,
     favoriteList: MutableList<favorites>,
     navController: NavController,
+    favoriteViewModel: FavoriteViewModel,
     onClick: () -> Unit = {}
 ) {
 
     HorizontalPager(state = pagerState) { page ->
         when (page) {
             0 -> ContactListScreen(navController, contactList)
-            1 -> GalleryScreen(navController = navController, favoritelist = favoriteList)
-            2 -> TabContentScreen(data = "Welcome to Screen 3")
+            1 -> GalleryScreen(navController = navController, favoritelist = favoriteList, favoriteViewModel)
+            2 -> JournalBeginScreen(navController = navController, favoriteList = favoriteList, favoriteViewModel)
         }
     }
 }

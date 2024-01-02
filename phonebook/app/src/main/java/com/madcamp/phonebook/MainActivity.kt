@@ -10,6 +10,7 @@ import android.os.Build
 import androidx.activity.compose.setContent
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
@@ -19,25 +20,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import com.madcamp.phonebook.domain.model.Contact
 import com.madcamp.phonebook.navigation.NavGraph
 import com.madcamp.phonebook.presentation.contact.viewmodel.ContactViewModel
+import com.madcamp.phonebook.presentation.database.FavoriteViewModel
+import com.madcamp.phonebook.presentation.database.Favorites
+import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 import com.madcamp.phonebook.ui.theme.PhonebookTheme
 
 class MainActivity : ComponentActivity(), ContactViewModel.PhoneCallListener, ContactViewModel.SendMessageListener {
     private lateinit var contactViewModel: ContactViewModel
 
-    data class favorites (
-        var name: String,
-        val image: Uri?,
-        var love: Boolean,
-        var description: String,
-        var valid: Boolean
-    )
 
     private var contactList by mutableStateOf<List<Contact>>(emptyList())
 
     private var getlist: MutableList<favorites> =  mutableListOf<favorites>()  // list of favorites
+
+    private lateinit var favoriteViewModel: FavoriteViewModel
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?)
@@ -49,10 +49,12 @@ class MainActivity : ComponentActivity(), ContactViewModel.PhoneCallListener, Co
         contactViewModel.phoneCallListener = this
         contactViewModel.sendMessageListener = this
 
+        favoriteViewModel = ViewModelProvider(this).get(FavoriteViewModel::class.java)
+        favoriteViewModel.createDatabase(this)
 
         setContent {
             PhonebookTheme {
-                NavGraph(activity = this, contactList = contactList, contactViewModel = contactViewModel, favoriteList = getlist)
+                NavGraph(activity = this, contactList = contactList, contactViewModel = contactViewModel, favoriteList = getlist, favoriteViewModel = favoriteViewModel)
             }
         }
 
