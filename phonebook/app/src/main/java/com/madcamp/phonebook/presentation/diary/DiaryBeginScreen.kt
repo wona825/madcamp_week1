@@ -1,9 +1,8 @@
-package com.madcamp.phonebook.presentation.journal
+package com.madcamp.phonebook.presentation.diary
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.runtime.Composable
@@ -16,10 +15,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.madcamp.phonebook.navigation.Screen
 import com.madcamp.phonebook.presentation.gallery.favorites.favorites
-import com.madcamp.phonebook.ui.theme.Blue400
 
 @Composable
-fun JournalBeginScreen(navController: NavController, favoriteList: MutableList<favorites>){
+fun DiaryBeginScreen(navController: NavController, favoriteList: MutableList<favorites>){
 
     val screen = Screen()
 
@@ -86,7 +84,7 @@ fun JournalBeginScreen(navController: NavController, favoriteList: MutableList<f
               FilledTonalButton(
 
                   onClick = {
-                        navController.navigate(screen.JournalWritingScreen)
+                        navController.navigate(screen.DiaryWritingScreen)
                   },
                   modifier = Modifier.align(Alignment.Center)
 

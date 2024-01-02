@@ -9,7 +9,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,8 +27,7 @@ import com.madcamp.phonebook.presentation.contact.ContactListScreen
 import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 import com.madcamp.phonebook.presentation.contact.viewModel.ContactViewModel
 import com.madcamp.phonebook.presentation.gallery.GalleryScreen
-import com.madcamp.phonebook.presentation.journal.JournalBeginScreen
-import com.madcamp.phonebook.presentation.journal.JournalWritingScreen
+import com.madcamp.phonebook.presentation.diary.DiaryBeginScreen
 import com.madcamp.phonebook.ui.theme.Blue400
 import kotlinx.coroutines.launch
 
@@ -125,7 +123,7 @@ fun TabsContent(
         when (page) {
             0 -> ContactListScreen(navController, ContactViewModel)
             1 -> GalleryScreen(navController = navController, favoritelist = favoriteList)
-            2 -> JournalBeginScreen(navController = navController, favoriteList = favoriteList)
+            2 -> DiaryBeginScreen(navController = navController, favoriteList = favoriteList)
         }
     }
 }

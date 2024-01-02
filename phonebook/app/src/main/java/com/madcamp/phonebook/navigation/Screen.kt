@@ -6,6 +6,6 @@ class Screen {
     val ContactDetailScreen = "ContactDetailScreen"
     val GalleryScreen = "GalleryScreen"
     val ImageDetailScreen = "ImageDetailScreen"
-    val JournalBeginScreen = "JournalBeginScreen"
-    val JournalWritingScreen = "JournalWritingScreen"
+    val DiaryBeginScreen = "DiaryBeginScreen"
+    val DiaryWritingScreen = "DiaryWritingScreen"
 }

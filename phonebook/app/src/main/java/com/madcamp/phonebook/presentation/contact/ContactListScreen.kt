@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.madcamp.phonebook.domain.model.Contact
 import com.madcamp.phonebook.navigation.Screen
-import com.madcamp.phonebook.presentation.contact.component.SearchBox
+import com.madcamp.phonebook.presentation.component.SearchBox
 import com.madcamp.phonebook.presentation.contact.viewModel.ContactViewModel
 import com.madcamp.phonebook.ui.theme.Gray200
 import com.madcamp.phonebook.ui.theme.Gray400
