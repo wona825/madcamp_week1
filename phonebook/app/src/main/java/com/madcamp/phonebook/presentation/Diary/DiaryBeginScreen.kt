@@ -1,74 +1,86 @@
-package com.madcamp.phonebook.presentation.diary
+package com.madcamp.phonebook.presentation.Diary
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.madcamp.phonebook.navigation.Screen
+import com.madcamp.phonebook.presentation.Diary.component.ShowIconForEachDay
 import com.madcamp.phonebook.presentation.gallery.favorites.favorites
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DiaryBeginScreen(navController: NavController, favoriteList: MutableList<favorites>){
 
     val screen = Screen()
 
+    // Get a current year and date.
+    val currentDate = LocalDate.now()
+    val formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+    val formattedDate = currentDate.format(formatter)
+    val formattedDateList = formattedDate.split(".")
+    val currentYear = formattedDateList[0]
+    val currentMonth = formattedDateList[1]
+    val currentDay = formattedDateList[2]
+
     Box(){
         Column(){
 
+            // Year
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxSize(),
+            ){
+                Text(text = currentYear, modifier = Modifier.align(Alignment.BottomCenter), fontSize = 15.sp)
+            }
+
+            // Month
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxSize(),
+            ){
+                Text(text = currentMonth, modifier = Modifier.align(Alignment.BottomCenter), fontSize = 45.sp)
+            }
+
+            // Emtpy Space
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxSize(),
+            ){
+            }
+
+
+            //Date Diary
+            for(week_index in 0 until 5){
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(10.dp)
+                        .fillMaxSize(),
+                ){
+                    ShowIconForEachDay(week = week_index, favoriteList = favoriteList, navController)
+                }
+            }
+
             // Empty Space
-            Box(
-                modifier = Modifier
-                    .weight(3f)
-                    .fillMaxSize(),
-            ){
-
-            }
-
-            // Big Title
-            Box(
-                modifier = Modifier
-                    .weight(3f)
-                    .fillMaxSize(),
-            ){
-                Text(
-                    text = "당신의 오늘은 어땠나요?",
-                    fontSize = 35.sp,
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                )
-            }
-
-            // Small Title
             Box(
                 modifier = Modifier
                     .weight(2f)
-                    .fillMaxSize(),
-            ){
-                val quoteList = listOf("\"아프니까 청춘이다.\" - 김난도", "\"하루라도 책을 읽지 않으면 입안에 가시가 돋는다.\" - 안중근")
-
-                Text(
-                    text = quoteList.random() ,
-                    fontSize = 15.sp,
-                    color = Color.Gray,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.align(Alignment.TopCenter)
-                )
-            }
-
-            // Empty Space
-            Box(
-                modifier = Modifier
-                    .weight(3f)
                     .fillMaxSize(),
             ){
 
@@ -91,14 +103,6 @@ fun DiaryBeginScreen(navController: NavController, favoriteList: MutableList<fav
                 ) {
                     Text("소중한 오늘 기록하기")
                 }
-            }
-
-            // Empty Space
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-            ){
-
             }
 
         }

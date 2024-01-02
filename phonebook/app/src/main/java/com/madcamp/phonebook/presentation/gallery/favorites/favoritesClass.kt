@@ -6,7 +6,7 @@ import com.madcamp.phonebook.domain.model.Contact
 data class favorites (
     var name: String,
     var icon: Int,
-    val image: Uri?,
+    var image: Uri?,
     var love: Boolean,
     var description: String,
     var valid: Boolean,

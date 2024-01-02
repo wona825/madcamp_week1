@@ -12,7 +12,7 @@ import io.ktor.http.contentType
 object ContactRepository {
     suspend fun fetchUsers(contactList: List<Contact>): List<ContactResponse> {
 
-        val url = "http://ec2-3-36-76-237.ap-northeast-2.compute.amazonaws.com:8080/api/phone/match-all"
+        val url = "match_all_contact_url"
 
         val httpClient = HttpClient {
             install(JsonFeature) {
