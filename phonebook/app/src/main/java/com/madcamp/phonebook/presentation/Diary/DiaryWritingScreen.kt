@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.madcamp.phonebook.domain.model.Contact
+import com.madcamp.phonebook.navigation.Screen
 import com.madcamp.phonebook.presentation.Diary.component.ChooseImage
 import com.madcamp.phonebook.presentation.Diary.component.IconDropBox
 import com.madcamp.phonebook.presentation.component.TextBox
@@ -75,6 +76,7 @@ fun DiaryWritingScreen(
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var imageUriValue: MutableState<Uri?> = remember {mutableStateOf(null)}
     val context = LocalContext.current
+    val screen = Screen()
 
     val contactFavoriteList = contactViewModel.contactList.filter {
         it.favoriteStatus
