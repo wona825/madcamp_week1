@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -38,6 +39,7 @@ fun ShowIconForEachDay(week: Int, favoriteList: MutableList<favorites>, navContr
             val wantDate = if((startDate + i) < 10) currentYear + "." + currentMonth + ".0" + (startDate + i).toString() else currentYear + "." + currentMonth + "." + (startDate + i).toString()
             val favorite = favoriteList.filter {it.dateTime == wantDate}
 
+
             if (favorite.size != 0){
                 val favorite_elem = favorite[0]
                 val indexOfFavorite = favoriteList.indexOf(favorite_elem)
@@ -45,18 +47,44 @@ fun ShowIconForEachDay(week: Int, favoriteList: MutableList<favorites>, navContr
                     modifier = Modifier.weight(1f)
                 ){
                     when (favorite_elem.icon) {
-                        1 -> Image(painter = painterResource(id = R.drawable.dog_1), contentDescription = null, modifier = Modifier.size(30.dp).clickable{navController.navigate(screen.ImageDetailScreen + "/${indexOfFavorite}")})
-                        2 -> Image(painter = painterResource(id = R.drawable.dog_2), contentDescription = null, modifier = Modifier.size(30.dp).clickable{navController.navigate(screen.ImageDetailScreen + "/${indexOfFavorite}")})
-                        3 -> Image(painter = painterResource(id = R.drawable.dog_3), contentDescription = null, modifier = Modifier.size(30.dp).clickable{navController.navigate(screen.ImageDetailScreen + "/${indexOfFavorite}")})
-                        4 -> Image(painter = painterResource(id = R.drawable.dog_4), contentDescription = null, modifier = Modifier.size(30.dp).clickable{navController.navigate(screen.ImageDetailScreen + "/${indexOfFavorite}")})
-                        5 -> Image(painter = painterResource(id = R.drawable.dog_5), contentDescription = null, modifier = Modifier.size(30.dp).clickable{navController.navigate(screen.ImageDetailScreen + "/${indexOfFavorite}")})
+                        1 -> Image(
+                            painter = painterResource(id = R.drawable.dog_1),
+                            contentDescription = null,
+                            modifier = Modifier.size(30.dp)
+                                .clickable { navController.navigate(screen.ImageDetailScreen + "/${indexOfFavorite}") })
+
+                        2 -> Image(
+                            painter = painterResource(id = R.drawable.dog_2),
+                            contentDescription = null,
+                            modifier = Modifier.size(30.dp)
+                                .clickable { navController.navigate(screen.ImageDetailScreen + "/${indexOfFavorite}") })
+
+                        3 -> Image(
+                            painter = painterResource(id = R.drawable.dog_3),
+                            contentDescription = null,
+                            modifier = Modifier.size(30.dp)
+                                .clickable { navController.navigate(screen.ImageDetailScreen + "/${indexOfFavorite}") })
+
+                        4 -> Image(
+                            painter = painterResource(id = R.drawable.dog_4),
+                            contentDescription = null,
+                            modifier = Modifier.size(30.dp)
+                                .clickable { navController.navigate(screen.ImageDetailScreen + "/${indexOfFavorite}") })
+
+                        5 -> Image(
+                            painter = painterResource(id = R.drawable.dog_5),
+                            contentDescription = null,
+                            modifier = Modifier.size(30.dp)
+                                .clickable { navController.navigate(screen.ImageDetailScreen + "/${indexOfFavorite}") })
+
                         else -> {}
                     }
                 }
             }
+
             else{
                 Box(
-                    modifier = Modifier.weight(1.5f)
+                    modifier = Modifier.weight(1f)
                 ){
 
                 }

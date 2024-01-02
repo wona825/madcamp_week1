@@ -30,7 +30,7 @@ import com.madcamp.phonebook.presentation.contact.ContactListScreen
 import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 import com.madcamp.phonebook.presentation.contact.viewModel.ContactViewModel
 import com.madcamp.phonebook.presentation.gallery.GalleryScreen
-import com.madcamp.phonebook.presentation.diary.DiaryBeginScreen
+import com.madcamp.phonebook.presentation.Diary.DiaryBeginScreen
 import com.madcamp.phonebook.ui.theme.Brown200
 import com.madcamp.phonebook.ui.theme.Brown300
 import com.madcamp.phonebook.ui.theme.Brown400
