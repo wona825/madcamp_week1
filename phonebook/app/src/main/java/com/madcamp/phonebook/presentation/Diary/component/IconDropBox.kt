@@ -10,6 +10,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,16 +22,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.madcamp.phonebook.R
 import com.madcamp.phonebook.presentation.gallery.component.getScreenWidth
+import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 
 @Composable
-fun IconDropBox(iconContent: Int){
+fun IconDropBox(iconValue: MutableState<Int>){
 
         var expanded by remember{ mutableStateOf(false)}
         val items = listOf("1", "2", "3", "4", "5")
         val screenWidth = getScreenWidth(LocalContext.current)
         val iconSize = ((screenWidth.toDouble())/3).toInt()
         var selectedIndex by remember {mutableStateOf(0)}
-        var iconContent by remember{mutableStateOf(-1)}
+        var iconContent by remember {mutableStateOf(-1)}
 
     Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -72,6 +74,8 @@ fun IconDropBox(iconContent: Int){
                             else -> {}
                         }
                         iconContent = selectedIndex + 1
+                        iconValue.value = iconContent
+
                     }
                 }
             }

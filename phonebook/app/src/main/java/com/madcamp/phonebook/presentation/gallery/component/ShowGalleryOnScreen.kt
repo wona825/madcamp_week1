@@ -40,19 +40,6 @@ import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 @Composable
 fun ShowGalleryOnScreen(navController: NavController, favoritelist: MutableList<favorites>){
 
-//        var localFavoriteList: MutableList<Favorites> =  mutableListOf<Favorites>()
-//
-//        favoriteViewModel.getAllFavorites{
-//            favorites ->
-//            favorites.forEach{
-//                favorite -> localFavoriteList.add(favorite)
-//            }
-//        }
-//
-//        val size = localFavoriteList.size
-
-        //Log.d("The number", "Size is $size")
-
         for (index in favoritelist.indices step 3) {
 
             Row(
