@@ -24,10 +24,11 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
-import com.madcamp.phonebook.domain.model.Contact
 import com.madcamp.phonebook.presentation.contact.ContactListScreen
 import com.madcamp.phonebook.presentation.database.FavoriteViewModel
 import com.madcamp.phonebook.presentation.gallery.favorites.favorites
+import com.madcamp.phonebook.MainActivity.favorites
+import com.madcamp.phonebook.presentation.contact.viewModel.ContactViewModel
 import com.madcamp.phonebook.presentation.gallery.GalleryScreen
 import com.madcamp.phonebook.presentation.journal.JournalBeginScreen
 import com.madcamp.phonebook.presentation.journal.JournalWritingScreen
@@ -38,7 +39,7 @@ import kotlinx.coroutines.launch
 @ExperimentalPagerApi
 @Composable
 fun TabLayout(
-    contactList: List<Contact>,
+    ContactViewModel: ContactViewModel,
     favoriteList: MutableList<favorites>,
     navController: NavController,
     favoriteViewModel: FavoriteViewModel
@@ -65,7 +66,7 @@ fun TabLayout(
             }
         }
         Tabs(pagerState = pagerState)
-        TabsContent(pagerState = pagerState, contactList = contactList, favoriteList, navController = navController, favoriteViewModel)
+        TabsContent(pagerState = pagerState, ContactViewModel = ContactViewModel, favoriteList, navController = navController, favoriteViewModel)
     }
 }
 
@@ -117,7 +118,7 @@ fun Tabs(pagerState: PagerState) {
 @Composable
 fun TabsContent(
     pagerState: PagerState,
-    contactList: List<Contact>,
+    ContactViewModel: ContactViewModel,
     favoriteList: MutableList<favorites>,
     navController: NavController,
     favoriteViewModel: FavoriteViewModel,
@@ -126,7 +127,7 @@ fun TabsContent(
 
     HorizontalPager(state = pagerState) { page ->
         when (page) {
-            0 -> ContactListScreen(navController, contactList)
+            0 -> ContactListScreen(navController, ContactViewModel)
             1 -> GalleryScreen(navController = navController, favoritelist = favoriteList, favoriteViewModel)
             2 -> JournalBeginScreen(navController = navController, favoriteList = favoriteList, favoriteViewModel)
         }

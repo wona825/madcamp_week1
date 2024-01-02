@@ -39,7 +39,8 @@ import androidx.navigation.NavController
 import com.madcamp.phonebook.domain.model.Contact
 import com.madcamp.phonebook.navigation.Screen
 import com.madcamp.phonebook.presentation.contact.component.TextBox
-import com.madcamp.phonebook.presentation.contact.viewmodel.ContactViewModel
+import com.madcamp.phonebook.presentation.contact.viewModel.ContactUpdateViewModel
+import com.madcamp.phonebook.presentation.contact.viewModel.ContactViewModel
 import com.madcamp.phonebook.ui.theme.Gray100
 import com.madcamp.phonebook.ui.theme.Gray200
 import com.madcamp.phonebook.ui.theme.Gray400
@@ -47,18 +48,20 @@ import com.madcamp.phonebook.ui.theme.Gray400
 @Composable
 fun ContactDetailScreen(
     navController: NavController,
-    contactList: List<Contact>,
     contactViewModel: ContactViewModel
 ) {
     val screen = Screen()
     var isEditmode by remember { mutableStateOf(false) }
-    var contactNumber by remember { mutableStateOf(navController.currentBackStackEntry?.arguments?.getString("contactNumber") ?: "") }
-    var contact by remember { mutableStateOf(
-        contactList.find { it.phoneNumber == contactNumber } ?: Contact()
+    val contactNumber by remember { mutableStateOf(navController.currentBackStackEntry?.arguments?.getString("contactNumber") ?: "") }
+    val contact by remember { mutableStateOf(
+        contactViewModel.contactList.find { it.phoneNumber == contactNumber } ?: Contact()
         )
     }
     var contactName by remember { mutableStateOf(contact.name) }
     var contactFavoriteStatus by remember { mutableStateOf(contact.favoriteStatus) }
+
+    val contactUpdateViewModel = ContactUpdateViewModel(contact, contactViewModel)
+
 
     Column(
         modifier = Modifier
@@ -85,6 +88,8 @@ fun ContactDetailScreen(
                     .size(35.dp)
                     .clickable {
                         contactFavoriteStatus = !contactFavoriteStatus
+                        contact.favoriteStatus = contactFavoriteStatus
+                        contactUpdateViewModel.event(2)
                     },
                 contentDescription = "contact_star",
                 tint = Color.Black
@@ -155,7 +160,7 @@ fun ContactDetailScreen(
         ) {
             Box(
                 modifier = Modifier
-                    .size(120.dp, 55.dp)
+                    .size(130.dp, 55.dp)
                     .clip(RoundedCornerShape(50))
                     .background(Gray200)
                     .border(1.dp, Color.Black, RoundedCornerShape(50))
@@ -174,7 +179,7 @@ fun ContactDetailScreen(
 
             Box(
                 modifier = Modifier
-                    .size(120.dp, 55.dp)
+                    .size(130.dp, 55.dp)
                     .clip(RoundedCornerShape(50))
                     .background(Gray200)
                     .border(1.dp, Color.Black, RoundedCornerShape(50))
@@ -191,6 +196,29 @@ fun ContactDetailScreen(
                 )
             }
         }
+        Spacer(modifier = Modifier.height(40.dp))
 
+        if (isEditmode) {
+            Box(
+                modifier = Modifier
+                    .padding(start = 20.dp)
+                    .fillMaxWidth()
+                    .height(55.dp)
+                    .clip(RoundedCornerShape(50))
+                    .background(Gray200)
+                    .border(1.dp, Color.Black, RoundedCornerShape(50))
+                    .clickable {
+                        contact.name = contactName
+                        contactUpdateViewModel.event(1)
+                        isEditmode = false
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "완료",
+                    fontSize = 20.sp
+                )
+            }
+        }
     }
 }

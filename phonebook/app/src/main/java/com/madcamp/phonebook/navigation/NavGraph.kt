@@ -10,10 +10,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.madcamp.phonebook.domain.model.Contact
 import com.madcamp.phonebook.presentation.contact.ContactDetailScreen
 import com.madcamp.phonebook.presentation.contact.ContactListScreen
-import com.madcamp.phonebook.presentation.contact.viewmodel.ContactViewModel
+import com.madcamp.phonebook.presentation.contact.viewModel.ContactViewModel
 import com.madcamp.phonebook.presentation.TabLayout
 import com.madcamp.phonebook.presentation.database.FavoriteViewModel
 import com.madcamp.phonebook.presentation.gallery.favorites.favorites
@@ -28,7 +27,6 @@ import com.madcamp.phonebook.presentation.journal.JournalWritingScreen
 @Composable
 fun NavGraph(
     activity: ComponentActivity,
-    contactList: List<Contact>,
     contactViewModel: ContactViewModel,
     favoriteList: MutableList<favorites>,
     favoriteViewModel: FavoriteViewModel
@@ -41,13 +39,13 @@ fun NavGraph(
         startDestination = screen.MainScreen
     ) {
         composable(screen.MainScreen) {
-            TabLayout(contactList, favoriteList, navController, favoriteViewModel)
+            TabLayout(contactViewModel, favoriteList, navController)
         }
 
         composable(screen.ContactListScreen) {
             ContactListScreen(
                 navController = navController,
-                contactList = contactList
+                contactViewModel = contactViewModel
             )
         }
 
@@ -56,7 +54,6 @@ fun NavGraph(
         ) {
             ContactDetailScreen(
                 navController = navController,
-                contactList = contactList,
                 contactViewModel = contactViewModel
             )
         }
