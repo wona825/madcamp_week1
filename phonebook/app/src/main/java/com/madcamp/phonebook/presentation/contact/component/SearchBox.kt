@@ -65,7 +65,10 @@ fun SearchBox(
             backgroundColor = Gray100
         ),
         trailingIcon = {
-            Icon(Icons.Filled.Search, "", Modifier.clickable { onClickIcon() })
+            Icon(Icons.Filled.Search, "", Modifier.clickable {
+                onClickIcon()
+                keyboardController?.hide()
+            })
         },
         keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(
