@@ -23,9 +23,9 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
-import com.madcamp.phonebook.domain.model.Contact
 import com.madcamp.phonebook.presentation.contact.ContactListScreen
 import com.madcamp.phonebook.MainActivity.favorites
+import com.madcamp.phonebook.presentation.contact.viewModel.ContactViewModel
 import com.madcamp.phonebook.presentation.gallery.GalleryScreen
 import com.madcamp.phonebook.ui.theme.Blue400
 import kotlinx.coroutines.launch
@@ -34,7 +34,7 @@ import kotlinx.coroutines.launch
 @ExperimentalPagerApi
 @Composable
 fun TabLayout(
-    contactList: List<Contact>,
+    ContactViewModel: ContactViewModel,
     favoriteList: MutableList<favorites>,
     navController: NavController
 ) {
@@ -60,7 +60,7 @@ fun TabLayout(
             }
         }
         Tabs(pagerState = pagerState)
-        TabsContent(pagerState = pagerState, contactList = contactList, favoriteList, navController = navController)
+        TabsContent(pagerState = pagerState, ContactViewModel = ContactViewModel, favoriteList, navController = navController)
     }
 }
 
@@ -112,7 +112,7 @@ fun Tabs(pagerState: PagerState) {
 @Composable
 fun TabsContent(
     pagerState: PagerState,
-    contactList: List<Contact>,
+    ContactViewModel: ContactViewModel,
     favoriteList: MutableList<favorites>,
     navController: NavController,
     onClick: () -> Unit = {}
@@ -120,8 +120,8 @@ fun TabsContent(
 
     HorizontalPager(state = pagerState) { page ->
         when (page) {
-            0 -> ContactListScreen(navController, contactList)
-            1 -> GalleryScreen(navController = navController, favoritelist = favoriteList)
+            0 -> ContactListScreen(navController, ContactViewModel)
+            1 -> Gallery_Tab(navController = navController, favoritelist = favoriteList)
             2 -> TabContentScreen(data = "Welcome to Screen 3")
         }
     }

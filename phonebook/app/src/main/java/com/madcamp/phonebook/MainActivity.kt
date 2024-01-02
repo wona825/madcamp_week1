@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.provider.ContactsContract
 import androidx.activity.ComponentActivity
 import androidx.annotation.RequiresApi
+
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,7 +22,7 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
 import com.madcamp.phonebook.domain.model.Contact
 import com.madcamp.phonebook.navigation.NavGraph
-import com.madcamp.phonebook.presentation.contact.viewmodel.ContactViewModel
+import com.madcamp.phonebook.presentation.contact.viewModel.ContactViewModel
 import com.madcamp.phonebook.ui.theme.PhonebookTheme
 
 class MainActivity : ComponentActivity(), ContactViewModel.PhoneCallListener, ContactViewModel.SendMessageListener {
@@ -34,8 +35,6 @@ class MainActivity : ComponentActivity(), ContactViewModel.PhoneCallListener, Co
         var description: String,
         var valid: Boolean
     )
-
-    private var contactList by mutableStateOf<List<Contact>>(emptyList())
 
     private var getlist: MutableList<favorites> =  mutableListOf<favorites>()  // list of favorites
 
@@ -52,7 +51,7 @@ class MainActivity : ComponentActivity(), ContactViewModel.PhoneCallListener, Co
 
         setContent {
             PhonebookTheme {
-                NavGraph(activity = this, contactList = contactList, contactViewModel = contactViewModel, favoriteList = getlist)
+                NavGraph(activity = this, contactViewModel = contactViewModel, favoriteList = getlist)
             }
         }
 
@@ -109,7 +108,8 @@ class MainActivity : ComponentActivity(), ContactViewModel.PhoneCallListener, Co
 
                 contacts.add(Contact(name, number))
             }
-            contactList = contacts
+            contactViewModel.contactList = contacts
+            contactViewModel.event()
         }
     }
 

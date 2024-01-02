@@ -2,21 +2,27 @@ package com.madcamp.phonebook.presentation.contact
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,6 +40,7 @@ import androidx.navigation.NavController
 import com.madcamp.phonebook.domain.model.Contact
 import com.madcamp.phonebook.navigation.Screen
 import com.madcamp.phonebook.presentation.contact.component.SearchBox
+import com.madcamp.phonebook.presentation.contact.viewModel.ContactViewModel
 import com.madcamp.phonebook.ui.theme.Gray200
 import com.madcamp.phonebook.ui.theme.Gray400
 
@@ -41,20 +48,29 @@ import com.madcamp.phonebook.ui.theme.Gray400
 @Composable
 fun ContactListScreen(
     navController: NavController,
-    contactList: List<Contact>
+    contactViewModel: ContactViewModel
 ) {
     val screen = Screen()
 
     var search by rememberSaveable { mutableStateOf("") }
 
+    var checkFavoriteStatus by rememberSaveable { mutableStateOf(false) }
+
     // 검색된 연락처 목록
-    val filteredContacts = contactList.filter {
-        it.name.contains(search, ignoreCase = true) ||
-                it.phoneNumber.contains(search)
+    val filteredContacts = contactViewModel.contactList.filter {
+        it.name.contains(search, ignoreCase = true) || it.phoneNumber.contains(search)
     }
 
-    val grouped = if (filteredContacts != mutableListOf(Contact())) {
-        filteredContacts.groupBy {
+    val filteredFavorites = if (checkFavoriteStatus) {
+        filteredContacts.filter {
+            it.favoriteStatus
+        }
+    } else {
+        filteredContacts
+    }
+
+    val grouped = if (filteredFavorites != mutableListOf(Contact())) {
+        filteredFavorites.groupBy {
             it.name.first().getKoreanConsonant()
         }
     } else {
@@ -62,13 +78,14 @@ fun ContactListScreen(
     }
 
     val sortedGrouped = grouped.toSortedMap()
-
+    
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        if (contactList.isNotEmpty()) {
+        if (contactViewModel.contactList.isNotEmpty()) {
+
             Spacer(modifier = Modifier.height(20.dp))
             SearchBox(
                 text = search,
@@ -77,6 +94,35 @@ fun ContactListScreen(
                     search = newText
                 }
             )
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = 20.dp),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = if (checkFavoriteStatus) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                    modifier = Modifier
+                        .size(17.dp)
+                        .clickable {
+                            checkFavoriteStatus = !checkFavoriteStatus
+                        },
+                    contentDescription = "check_favorite_status_contacts",
+                    tint = if (checkFavoriteStatus) Color.Black else Color.Gray
+                )
+                Spacer(modifier = Modifier.width(3.dp))
+
+                Text(
+                    text = "즐겨찾기만 보기",
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = if (checkFavoriteStatus) Color.Black else Color.Gray,
+                    modifier = Modifier.clickable { checkFavoriteStatus = !checkFavoriteStatus }
+                )
+            }
             Spacer(modifier = Modifier.height(30.dp))
 
             if (sortedGrouped.isNotEmpty()) {
@@ -182,7 +228,7 @@ fun ContactListItem(
         ) {
 
             Text(
-                text = "${contact.name}",
+                text = contact.name,
                 style = MaterialTheme.typography.body1,
                 fontWeight = FontWeight.W900,
                 modifier = Modifier.padding(bottom = 7.dp)
