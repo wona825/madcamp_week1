@@ -10,15 +10,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.madcamp.phonebook.presentation.Diary.DiaryBeginScreen
 import com.madcamp.phonebook.presentation.contact.ContactDetailScreen
 import com.madcamp.phonebook.presentation.contact.ContactListScreen
 import com.madcamp.phonebook.presentation.contact.viewModel.ContactViewModel
 import com.madcamp.phonebook.presentation.TabLayout
+import com.madcamp.phonebook.presentation.Diary.DiaryWritingScreen
 import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 import com.madcamp.phonebook.presentation.gallery.GalleryScreen
 import com.madcamp.phonebook.presentation.gallery.ImageDetailScreen
-import com.madcamp.phonebook.presentation.diary.DiaryBeginScreen
-import com.madcamp.phonebook.presentation.DiaryWritingScreen
+
 
 
 @RequiresApi(Build.VERSION_CODES.R)
