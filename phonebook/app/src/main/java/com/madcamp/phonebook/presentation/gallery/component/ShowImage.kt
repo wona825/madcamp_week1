@@ -19,24 +19,22 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.madcamp.phonebook.MainActivity
+import com.madcamp.phonebook.domain.model.Diary
 import com.madcamp.phonebook.navigation.Screen
-import com.madcamp.phonebook.presentation.gallery.favorites.favorites
-import java.io.IOException
+import com.madcamp.phonebook.presentation.Diary.viewmodel.DiaryViewModel
 
 // Show each image on the screen.
 @RequiresApi(Build.VERSION_CODES.R)
 @Composable
-fun ShowImage(navController:NavController, favorite: favorites, favorite_list: MutableList<favorites>){
+fun ShowImage(navController:NavController, diary: Diary, diaryViewModel: DiaryViewModel){
 
     val bitmap = remember { mutableStateOf<Bitmap?>(null) }
-    val imageUri = favorite.image
-    val indexOfFavorite = favorite_list.indexOf(favorite)
+    val imageUri = diary.image
+    val indexOfDiary = diaryViewModel.diaryList.indexOf(diary)
 
     val context = LocalContext.current
     val screen = Screen()
     val screenWidth = ((getScreenWidth(LocalContext.current).toDouble()) / 3).toInt()
-    val exif: ExifInterface?
 
     imageUri?.let {
         if (Build.VERSION.SDK_INT < 28) {
@@ -47,15 +45,6 @@ fun ShowImage(navController:NavController, favorite: favorites, favorite_list: M
             bitmap.value = ImageDecoder.decodeBitmap(source)
         }
 
-
-        exif = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            ExifInterface(context.contentResolver.openInputStream(imageUri)!!)
-        } else {
-            ExifInterface(imageUri.path!!)
-        }
-            
-        // Get the time when the image is pictured.
-        favorite_list[indexOfFavorite].dateTime = exif.getAttribute(ExifInterface.TAG_DATETIME)
         
 
         bitmap.value?.let {btm ->
@@ -67,7 +56,7 @@ fun ShowImage(navController:NavController, favorite: favorites, favorite_list: M
                     .width(screenWidth.dp)
                     .height(screenWidth.dp)
                     .clickable {
-                        navController.navigate(screen.ImageDetailScreen + "/${indexOfFavorite}")
+                        navController.navigate(screen.ImageDetailScreen + "/${indexOfDiary}")
                     }
             )
         }

@@ -26,11 +26,12 @@ import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.madcamp.phonebook.R
+import com.madcamp.phonebook.domain.model.Diary
 import com.madcamp.phonebook.presentation.contact.ContactListScreen
-import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 import com.madcamp.phonebook.presentation.contact.viewModel.ContactViewModel
 import com.madcamp.phonebook.presentation.gallery.GalleryScreen
 import com.madcamp.phonebook.presentation.Diary.DiaryBeginScreen
+import com.madcamp.phonebook.presentation.Diary.viewmodel.DiaryViewModel
 import com.madcamp.phonebook.ui.theme.Brown200
 import com.madcamp.phonebook.ui.theme.Brown300
 import com.madcamp.phonebook.ui.theme.Brown400
@@ -41,7 +42,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun TabLayout(
     ContactViewModel: ContactViewModel,
-    favoriteList: MutableList<favorites>,
+    diaryViewModel: DiaryViewModel,
     navController: NavController
 ) {
     val pagerState = rememberPagerState(pageCount = 3)
@@ -63,7 +64,7 @@ fun TabLayout(
             }
         }
         Tabs(pagerState = pagerState)
-        TabsContent(pagerState = pagerState, ContactViewModel = ContactViewModel, favoriteList, navController = navController)
+        TabsContent(pagerState = pagerState, ContactViewModel = ContactViewModel, diaryViewModel, navController = navController)
     }
 }
 
@@ -117,17 +118,18 @@ fun Tabs(pagerState: PagerState) {
 fun TabsContent(
     pagerState: PagerState,
     ContactViewModel: ContactViewModel,
-    favoriteList: MutableList<favorites>,
+    diaryViewModel: DiaryViewModel,
     navController: NavController,
     onClick: () -> Unit = {}
 ) {
 
     HorizontalPager(state = pagerState) { page ->
-        when (page) {
-            0 -> ContactListScreen(navController, ContactViewModel)
-            1 -> GalleryScreen(navController = navController, favoritelist = favoriteList)
-            2 -> DiaryBeginScreen(navController = navController, favoriteList = favoriteList)
-        }
+
+            when (page) {
+                0 -> ContactListScreen(navController, ContactViewModel)
+                1 -> GalleryScreen(navController = navController, diaryViewModel)
+                2 -> DiaryBeginScreen(navController = navController, diaryViewModel)
+            }
     }
 }
 

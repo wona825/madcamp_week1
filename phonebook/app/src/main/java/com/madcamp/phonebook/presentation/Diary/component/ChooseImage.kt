@@ -34,7 +34,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.madcamp.phonebook.presentation.gallery.component.getScreenWidth
-import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 
 @Composable
 fun ChooseImage(iconValue: MutableState<Uri?>){

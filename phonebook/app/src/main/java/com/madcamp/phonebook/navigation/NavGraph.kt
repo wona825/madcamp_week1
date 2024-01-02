@@ -4,19 +4,22 @@ import android.os.Build
 import androidx.activity.ComponentActivity
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.remember
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.madcamp.phonebook.domain.model.Diary
 import com.madcamp.phonebook.presentation.Diary.DiaryBeginScreen
 import com.madcamp.phonebook.presentation.contact.ContactDetailScreen
 import com.madcamp.phonebook.presentation.contact.ContactListScreen
 import com.madcamp.phonebook.presentation.contact.viewModel.ContactViewModel
 import com.madcamp.phonebook.presentation.TabLayout
 import com.madcamp.phonebook.presentation.Diary.DiaryWritingScreen
-import com.madcamp.phonebook.presentation.gallery.favorites.favorites
+import com.madcamp.phonebook.presentation.Diary.viewmodel.DiaryViewModel
 import com.madcamp.phonebook.presentation.gallery.GalleryScreen
 import com.madcamp.phonebook.presentation.gallery.ImageDetailScreen
 
@@ -28,17 +31,20 @@ import com.madcamp.phonebook.presentation.gallery.ImageDetailScreen
 fun NavGraph(
     activity: ComponentActivity,
     contactViewModel: ContactViewModel,
-    favoriteList: MutableList<favorites>
+    diaryList: List<Diary>
 ) {
     val screen = Screen()
     val navController = rememberNavController()
+    val diaryViewModel = remember {
+        DiaryViewModel()
+    }
 
     NavHost(
         navController = navController,
         startDestination = screen.MainScreen
     ) {
-        composable(screen.MainScreen) {
-            TabLayout(contactViewModel, favoriteList, navController)
+        composable(screen.MainScreen){
+            TabLayout(contactViewModel, diaryViewModel, navController)
         }
 
         composable(screen.ContactListScreen) {
@@ -57,20 +63,20 @@ fun NavGraph(
             )
         }
         composable(screen.GalleryScreen){
-            GalleryScreen(navController, favoriteList)
+            GalleryScreen(navController, diaryViewModel)
         }
 
         composable(screen.ImageDetailScreen+"/{index}", arguments = listOf(navArgument("index") { type = NavType.IntType })) { backStackEntry ->
             val index = backStackEntry.arguments?.getInt("index") ?: -1
-            ImageDetailScreen(navController, favoriteList, favoriteList[index])
+            ImageDetailScreen(navController, diaryViewModel, diaryViewModel.diaryList[index])
         }
 
         composable(screen.DiaryBeginScreen){
-            DiaryBeginScreen(navController, favoriteList)
+            DiaryBeginScreen(navController, diaryViewModel)
         }
 
         composable(screen.DiaryWritingScreen){
-            DiaryWritingScreen(navController = navController, favoriteList = favoriteList, contactViewModel = contactViewModel)
+            DiaryWritingScreen(navController = navController, diaryViewModel, contactViewModel = contactViewModel)
         }
 
     }

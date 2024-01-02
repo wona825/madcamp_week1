@@ -22,7 +22,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.madcamp.phonebook.R
 import com.madcamp.phonebook.presentation.gallery.component.getScreenWidth
-import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 
 @Composable
 fun IconDropBox(iconValue: MutableState<Int>){

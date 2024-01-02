@@ -23,11 +23,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.madcamp.phonebook.MainActivity
-import com.madcamp.phonebook.presentation.gallery.favorites.favorites
+import com.madcamp.phonebook.domain.model.Diary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchImage(favoritelist: List<favorites>){
+fun SearchImage(){
     var searchText by remember { mutableStateOf("") }
 
     Row(

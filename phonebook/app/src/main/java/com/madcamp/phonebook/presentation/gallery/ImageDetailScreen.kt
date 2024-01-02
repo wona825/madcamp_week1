@@ -54,20 +54,19 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.madcamp.phonebook.presentation.gallery.favorites.favorites
-import kotlinx.coroutines.launch
+import com.madcamp.phonebook.domain.model.Diary
+import com.madcamp.phonebook.presentation.Diary.viewmodel.DiaryViewModel
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun ImageDetailScreen(navController: NavHostController, favorite_list: MutableList<favorites>, favorite: favorites){
+fun ImageDetailScreen(navController: NavHostController, diaryViewModel: DiaryViewModel, diary: Diary){
 
     var clickFlagDescription by remember{ mutableStateOf(false) }
     var clickFlagName by remember{ mutableStateOf(false) }
     var description by remember { mutableStateOf("Write Description") }
     var name by remember { mutableStateOf("#Favorite") }
     val keyboardController = LocalSoftwareKeyboardController.current
-    val indexOfFavorite = favorite_list.indexOf(favorite)
-    val coroutineScope = rememberCoroutineScope()
+    val indexOfDiary = diaryViewModel.diaryList.indexOf(diary)
 
     Column(
         modifier = Modifier.padding(20.dp)
@@ -106,7 +105,7 @@ fun ImageDetailScreen(navController: NavHostController, favorite_list: MutableLi
                     modifier = Modifier
                         .weight(1f)
                         .clickable {
-                            favorite_list[indexOfFavorite].valid = false
+                            diaryViewModel.diaryList -= diary
                             navController.popBackStack()
                         }
                 ){
@@ -119,238 +118,238 @@ fun ImageDetailScreen(navController: NavHostController, favorite_list: MutableLi
         }
 
         // 2nd Line, Image
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(6f)
-                .border(2.dp, Color.Black)
-        ){
-
-            val bitmap = remember { mutableStateOf<Bitmap?>(null) }
-            val imageUri = favorite.image
-            val context = LocalContext.current
-
-            imageUri?.let {
-                if (Build.VERSION.SDK_INT < 28) {
-                    bitmap.value = MediaStore.Images.Media.getBitmap(context.contentResolver, it)
-                }
-                else {
-                    val source = ImageDecoder.createSource(context.contentResolver, it)
-                    bitmap.value = ImageDecoder.decodeBitmap(source)
-                }
-                bitmap.value?.let {btm ->
-                    Image(
-                        bitmap = btm.asImageBitmap(),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .fillMaxSize()
-                    )
-                }
-            }
-        }
-
-        // 3rd Line, Time and Place
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .weight(0.8f)
-                .background(Color.White)
-                .align(Alignment.CenterHorizontally)
-        ) {
-            Row() {
-
-                // dateTime
-                Box(
-                    modifier = Modifier.weight(5f),
-                    contentAlignment = Alignment.CenterStart
-
-                ){
-                    favorite.dateTime?.let {
-
-                        val dateAndTime = it.split(" ")
-                        val timeData = dateAndTime[0].replace(":", "/")
-
-                        Text(
-                            fontSize = 20.sp,
-                            text = timeData,
-                            color = Color.Gray,
-                            modifier = Modifier
-                                .fillMaxSize()
-
-                        )
-                    }
-                }
-            }
-        }
-
-
-        // 4th Line
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .weight(1f)
-                .align(Alignment.CenterHorizontally)
-        ){
-            Row(){
-
-                // Tags
-                Box(
-                    modifier = Modifier
-                        .weight(7f)
-                        .background(if (clickFlagName) Color.White else Color.White)
-                        .clickable {
-                            clickFlagName = !clickFlagName
-                            if (clickFlagName) {
-                                keyboardController?.show()
-                            }
-                        }
-                        .padding(5.dp)
-                ){
-                    if(clickFlagName){
-                        BasicTextField(
-                            textStyle = TextStyle(fontSize = 15.sp),
-                            value = name,
-                            onValueChange = { newText ->
-                                name = newText
-                            },
-                            keyboardOptions = KeyboardOptions.Default.copy(
-                                imeAction = ImeAction.Done
-                            ),
-                            keyboardActions = KeyboardActions(
-                                onDone = {
-                                    clickFlagName = !clickFlagName
-                                    favorite_list[indexOfFavorite].name = "#" + name
-                                    keyboardController?.hide()
-                                }
-                            ),
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(Color.Transparent)
-                                .heightIn(max = 50.dp),
-                            decorationBox = { innerTextField ->
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .background(
-                                            color = Color.White,
-                                            shape = RoundedCornerShape(size = 16.dp)
-                                        )
-                                        .padding(all = 5.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Create,
-                                        contentDescription = "",
-                                        tint = Color.DarkGray,
-                                    )
-                                    Spacer(modifier = Modifier.width(width = 8.dp))
-                                    innerTextField()
-                                }
-                            }
-                        )
-                    }
-                    else{
-                        Text(
-                            fontSize = 25.sp,
-                            text = favorite.name,
-                            color = Color.Black,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier
-                                .fillMaxSize()
-
-                        )
-                    }
-                }
-
-                // Like or Not
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        //.border(2.dp, Color.Black)
-                        .clickable {
-                            favorite_list[indexOfFavorite].love = !(favorite.love)
-                        }
-                        .background(Color.White)
-                ){
-                    Icon(
-                        imageVector = if (favorite.love) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxSize() // Adjust the size of the icon
-                            .align(Alignment.Center)
-                    )
-                }
-            }
-        }
-
-        // 5th Line, Description
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(4f)
-                .background(if (clickFlagDescription) Color.White else Color.White)
-                .clickable {
-                    clickFlagDescription = !clickFlagDescription
-                    if (clickFlagDescription) {
-                        keyboardController?.show()
-                    }
-                }
-                .padding(5.dp)
-        ){
-            if(clickFlagDescription){
-                BasicTextField(
-                    textStyle = TextStyle(fontSize = 15.sp),
-                    value = description,
-                    onValueChange = { newText ->
-                        description = newText
-                    },
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Done
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            clickFlagDescription = !clickFlagDescription
-                            favorite_list[indexOfFavorite].description = description + "..."
-                            keyboardController?.hide()
-                        }
-                    ),
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Transparent)
-                        .heightIn(max = 50.dp),
-                    decorationBox = { innerTextField ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(
-                                    color = Color.White,
-                                    shape = RoundedCornerShape(size = 16.dp)
-                                )
-                                .padding(all = 5.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Create,
-                                contentDescription = "",
-                                tint = Color.DarkGray,
-                            )
-                            Spacer(modifier = Modifier.width(width = 8.dp))
-                            innerTextField()
-                        }
-                    }
-                )
-            }
-            else{
-                Text(
-                    fontSize = 15.sp,
-                    text = favorite.description,
-                    color = Color.Black,
-                    modifier = Modifier.fillMaxSize()
-
-                )
-            }
-        }
+//        Box(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .weight(6f)
+//                .border(2.dp, Color.Black)
+//        ){
+//
+//            val bitmap = remember { mutableStateOf<Bitmap?>(null) }
+//            val imageUri = diary.image
+//            val context = LocalContext.current
+//
+//            imageUri?.let {
+//                if (Build.VERSION.SDK_INT < 28) {
+//                    bitmap.value = MediaStore.Images.Media.getBitmap(context.contentResolver, it)
+//                }
+//                else {
+//                    val source = ImageDecoder.createSource(context.contentResolver, it)
+//                    bitmap.value = ImageDecoder.decodeBitmap(source)
+//                }
+//                bitmap.value?.let {btm ->
+//                    Image(
+//                        bitmap = btm.asImageBitmap(),
+//                        contentDescription = null,
+//                        contentScale = ContentScale.Crop,
+//                        modifier = Modifier
+//                            .fillMaxSize()
+//                    )
+//                }
+//            }
+//        }
+//
+//        // 3rd Line, Time and Place
+//        Box(
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .weight(0.8f)
+//                .background(Color.White)
+//                .align(Alignment.CenterHorizontally)
+//        ) {
+//            Row() {
+//
+//                // dateTime
+//                Box(
+//                    modifier = Modifier.weight(5f),
+//                    contentAlignment = Alignment.CenterStart
+//
+//                ){
+//                    diary.dateTime?.let {
+//
+//                        val dateAndTime = it.split(" ")
+//                        val timeData = dateAndTime[0].replace(":", "/")
+//
+//                        Text(
+//                            fontSize = 20.sp,
+//                            text = timeData,
+//                            color = Color.Gray,
+//                            modifier = Modifier
+//                                .fillMaxSize()
+//
+//                        )
+//                    }
+//                }
+//            }
+//        }
+//
+//
+//        // 4th Line
+//        Box(
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .weight(1f)
+//                .align(Alignment.CenterHorizontally)
+//        ){
+//            Row(){
+//
+//                // Tags
+//                Box(
+//                    modifier = Modifier
+//                        .weight(7f)
+//                        .background(if (clickFlagName) Color.White else Color.White)
+//                        .clickable {
+//                            clickFlagName = !clickFlagName
+//                            if (clickFlagName) {
+//                                keyboardController?.show()
+//                            }
+//                        }
+//                        .padding(5.dp)
+//                ){
+//                    if(clickFlagName){
+//                        BasicTextField(
+//                            textStyle = TextStyle(fontSize = 15.sp),
+//                            value = name,
+//                            onValueChange = { newText ->
+//                                name = newText
+//                            },
+//                            keyboardOptions = KeyboardOptions.Default.copy(
+//                                imeAction = ImeAction.Done
+//                            ),
+//                            keyboardActions = KeyboardActions(
+//                                onDone = {
+//                                    clickFlagName = !clickFlagName
+//                                    diaryViewModel.diaryList[indexOfDiary].name = "#" + name
+//                                    keyboardController?.hide()
+//                                }
+//                            ),
+//                            modifier = Modifier
+//                                .fillMaxSize()
+//                                .background(Color.Transparent)
+//                                .heightIn(max = 50.dp),
+//                            decorationBox = { innerTextField ->
+//                                Row(
+//                                    modifier = Modifier
+//                                        .fillMaxWidth()
+//                                        .background(
+//                                            color = Color.White,
+//                                            shape = RoundedCornerShape(size = 16.dp)
+//                                        )
+//                                        .padding(all = 5.dp),
+//                                    verticalAlignment = Alignment.CenterVertically,
+//                                ) {
+//                                    Icon(
+//                                        imageVector = Icons.Default.Create,
+//                                        contentDescription = "",
+//                                        tint = Color.DarkGray,
+//                                    )
+//                                    Spacer(modifier = Modifier.width(width = 8.dp))
+//                                    innerTextField()
+//                                }
+//                            }
+//                        )
+//                    }
+//                    else{
+//                        Text(
+//                            fontSize = 25.sp,
+//                            text = diary.name,
+//                            color = Color.Black,
+//                            fontWeight = FontWeight.Bold,
+//                            modifier = Modifier
+//                                .fillMaxSize()
+//
+//                        )
+//                    }
+//                }
+//
+//                // Like or Not
+//                Box(
+//                    modifier = Modifier
+//                        .weight(1f)
+//                        //.border(2.dp, Color.Black)
+//                        .clickable {
+//                            diaryViewModel.diaryList[indexOfDiary].love = !(diary.love)
+//                        }
+//                        .background(Color.White)
+//                ){
+//                    Icon(
+//                        imageVector = if (diary.love) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+//                        contentDescription = null,
+//                        modifier = Modifier
+//                            .fillMaxSize() // Adjust the size of the icon
+//                            .align(Alignment.Center)
+//                    )
+//                }
+//            }
+//        }
+//
+//        // 5th Line, Description
+//        Box(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .weight(4f)
+//                .background(if (clickFlagDescription) Color.White else Color.White)
+//                .clickable {
+//                    clickFlagDescription = !clickFlagDescription
+//                    if (clickFlagDescription) {
+//                        keyboardController?.show()
+//                    }
+//                }
+//                .padding(5.dp)
+//        ){
+//            if(clickFlagDescription){
+//                BasicTextField(
+//                    textStyle = TextStyle(fontSize = 15.sp),
+//                    value = description,
+//                    onValueChange = { newText ->
+//                        description = newText
+//                    },
+//                    keyboardOptions = KeyboardOptions.Default.copy(
+//                        imeAction = ImeAction.Done
+//                    ),
+//                    keyboardActions = KeyboardActions(
+//                        onDone = {
+//                            clickFlagDescription = !clickFlagDescription
+//                            diaryViewModel.diaryList[indexOfDiary].description = description + "..."
+//                            keyboardController?.hide()
+//                        }
+//                    ),
+//                    modifier = Modifier
+//                        .fillMaxSize()
+//                        .background(Color.Transparent)
+//                        .heightIn(max = 50.dp),
+//                    decorationBox = { innerTextField ->
+//                        Row(
+//                            modifier = Modifier
+//                                .fillMaxWidth()
+//                                .background(
+//                                    color = Color.White,
+//                                    shape = RoundedCornerShape(size = 16.dp)
+//                                )
+//                                .padding(all = 5.dp),
+//                            verticalAlignment = Alignment.CenterVertically,
+//                        ) {
+//                            Icon(
+//                                imageVector = Icons.Default.Create,
+//                                contentDescription = "",
+//                                tint = Color.DarkGray,
+//                            )
+//                            Spacer(modifier = Modifier.width(width = 8.dp))
+//                            innerTextField()
+//                        }
+//                    }
+//                )
+//            }
+//            else{
+//                Text(
+//                    fontSize = 15.sp,
+//                    text = diary.description,
+//                    color = Color.Black,
+//                    modifier = Modifier.fillMaxSize()
+//
+//                )
+//            }
+//        }
 
     }
 
