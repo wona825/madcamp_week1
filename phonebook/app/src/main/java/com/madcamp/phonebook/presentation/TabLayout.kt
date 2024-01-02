@@ -2,6 +2,7 @@ package com.madcamp.phonebook.presentation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -13,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -23,12 +25,15 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
+import com.madcamp.phonebook.R
 import com.madcamp.phonebook.presentation.contact.ContactListScreen
 import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 import com.madcamp.phonebook.presentation.contact.viewModel.ContactViewModel
 import com.madcamp.phonebook.presentation.gallery.GalleryScreen
 import com.madcamp.phonebook.presentation.diary.DiaryBeginScreen
-import com.madcamp.phonebook.ui.theme.Blue400
+import com.madcamp.phonebook.ui.theme.Brown200
+import com.madcamp.phonebook.ui.theme.Brown300
+import com.madcamp.phonebook.ui.theme.Brown400
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.R)
@@ -44,19 +49,16 @@ fun TabLayout(
     Column(
         modifier = Modifier.background(Color.White)
     ) {
-        TopAppBar(backgroundColor = Blue400) {
+        TopAppBar(backgroundColor = Brown300) {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(
-                    text = "❀´▽`❀ ",
-                    style = TextStyle(color = Color.White),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = MaterialTheme.typography.h6.fontSize,
-                    modifier = Modifier.padding(all = 5.dp),
-                    textAlign = TextAlign.Center
+                Image(
+                    painterResource(id = R.drawable.dear_my_logo),
+                    contentDescription = "notice",
+                    modifier = Modifier.size(70.dp)
                 )
             }
         }
@@ -76,25 +78,26 @@ fun Tabs(pagerState: PagerState) {
     val scope = rememberCoroutineScope()
     TabRow(
         selectedTabIndex = pagerState.currentPage,
-        backgroundColor = Blue400,
+        backgroundColor = Brown300,
         contentColor = Color.White,
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
                 Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
                 height = 2.dp,
-                color = Color.White
+                color = Brown400
             )
         }
     ) {
         list.forEachIndexed { index, _ ->
             Tab(
                 icon = {
-                    Icon(imageVector = list[index].second, contentDescription = null)
+                    Icon(imageVector = list[index].second, contentDescription = null,
+                        tint = if (pagerState.currentPage == index) Brown400 else Brown200)
                 },
                 text = {
                     Text(
                         list[index].first,
-                        color = if (pagerState.currentPage == index) Color.White else Color.LightGray
+                        color = if (pagerState.currentPage == index) Brown400 else Brown200
                     )
                 },
                 selected = pagerState.currentPage == index,
@@ -139,7 +142,7 @@ fun TabContentScreen(data: String) {
         Text(
             text = data,
             style = MaterialTheme.typography.h5,
-            color = Blue400,
+            color = Brown300,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center
         )
