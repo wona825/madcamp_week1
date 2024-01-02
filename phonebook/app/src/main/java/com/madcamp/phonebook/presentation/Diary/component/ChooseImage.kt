@@ -37,7 +37,7 @@ import com.madcamp.phonebook.presentation.gallery.component.getScreenWidth
 import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 
 @Composable
-fun ChooseImage(newFavorites: favorites){
+fun ChooseImage(iconValue: MutableState<Uri?>){
 
     var permFlag by remember{ mutableStateOf(false) } // Does permission flag is on or not?
     var permIsGrantedFlag by remember{ mutableStateOf(false) } // Does check is granted or not?
@@ -63,7 +63,7 @@ fun ChooseImage(newFavorites: favorites){
                 bitmap.value = ImageDecoder.decodeBitmap(source)
             }
             clickFlagImage = true
-            newFavorites.image = imageUri
+            iconValue.value = imageUri
         }
 
         storageAccessFlag = false

@@ -66,6 +66,5 @@ fun GalleryScreen(navController: NavController, favoritelist: MutableList<favori
         }
 
 
-
         }
     }

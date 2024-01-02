@@ -1,7 +1,9 @@
 package com.madcamp.phonebook.presentation.Diary
 
+import android.app.AlertDialog
 import android.net.Uri
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
@@ -33,9 +35,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,8 +45,8 @@ import androidx.navigation.NavController
 import com.madcamp.phonebook.domain.model.Contact
 import com.madcamp.phonebook.presentation.Diary.component.ChooseImage
 import com.madcamp.phonebook.presentation.Diary.component.IconDropBox
-import com.madcamp.phonebook.presentation.contact.contactComponent.ContactDropDownBox
 import com.madcamp.phonebook.presentation.component.TextBox
+import com.madcamp.phonebook.presentation.contact.contactComponent.ContactDropDownBox
 import com.madcamp.phonebook.presentation.contact.viewModel.ContactViewModel
 import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 import com.madcamp.phonebook.ui.theme.Gray100
@@ -69,7 +71,10 @@ fun DiaryWritingScreen(
     var description by remember { mutableStateOf("") }
     var like by remember {mutableStateOf(false)}
     var icon by remember{mutableStateOf(-1)}
+    var iconValue: MutableState<Int> = remember {mutableStateOf(-1)}
     var imageUri by remember { mutableStateOf<Uri?>(null) }
+    var imageUriValue: MutableState<Uri?> = remember {mutableStateOf(null)}
+    val context = LocalContext.current
 
     val contactFavoriteList = contactViewModel.contactList.filter {
         it.favoriteStatus
@@ -80,7 +85,8 @@ fun DiaryWritingScreen(
         addAll(if (contactFavoriteList.isNotEmpty()) contactFavoriteList else contactViewModel.contactList)
     }
 
-    val newFavorites = favorites(title, icon, imageUri, like, description, true, formattedDate)
+
+    val newFavorites = favorites("", icon, imageUri, like, "", true, formattedDate)
 
     Column(
         modifier = Modifier.padding(20.dp)
@@ -115,25 +121,28 @@ fun DiaryWritingScreen(
             Spacer(modifier = Modifier.height(10.dp))
 
             // Icon
-            IconDropBox(icon)
+            IconDropBox(iconValue)
 
             Spacer(modifier = Modifier.height(10.dp))
 
             // Image
-            ChooseImage(newFavorites)
+            ChooseImage(imageUriValue)
+            newFavorites.image = imageUriValue.value
 
             Spacer(modifier = Modifier.height(10.dp))
 
             // Contact Tag, LikeOrNot
             Row(){
                 Box(modifier = Modifier.weight(6f)){ ContactDropDownBox(itemList = contactDropDownList) }
-                Box(modifier = Modifier.weight(1f).padding(top = 15.dp), contentAlignment = Alignment.BottomCenter){
+                Box(modifier = Modifier
+                    .weight(1f)
+                    .padding(top = 15.dp), contentAlignment = Alignment.BottomCenter){
                     Icon(
                         imageVector = if(like) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                         contentDescription = null,
                         modifier = Modifier
                             .fillMaxSize()
-                            .clickable{like = !like}
+                            .clickable { like = !like }
                     )
                 }
             }
@@ -175,8 +184,17 @@ fun DiaryWritingScreen(
             Box(modifier = Modifier.fillMaxSize()) {
                 FilledTonalButton(
                     onClick = {
-                        navController.popBackStack()
-                        favoriteList.add(newFavorites)
+
+                        newFavorites.image?.let{
+                            newFavorites.name = title
+                            newFavorites.description = description
+                            newFavorites.icon = iconValue.value
+                            favoriteList.add(newFavorites)
+                            navController.popBackStack()
+                        }
+                        if (newFavorites.image == null){
+                            Toast.makeText(context, "Please add an image", Toast.LENGTH_SHORT).show()
+                        }
                     },
                     modifier = Modifier.align(Alignment.Center)
                 ) {
