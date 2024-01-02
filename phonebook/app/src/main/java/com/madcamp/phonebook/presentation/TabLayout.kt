@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -30,10 +29,11 @@ import com.madcamp.phonebook.presentation.contact.ContactListScreen
 import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 import com.madcamp.phonebook.presentation.contact.viewModel.ContactViewModel
 import com.madcamp.phonebook.presentation.gallery.GalleryScreen
-import com.madcamp.phonebook.presentation.Diary.DiaryBeginScreen
+import com.madcamp.phonebook.presentation.diary.DiaryBeginScreen
 import com.madcamp.phonebook.ui.theme.Brown200
 import com.madcamp.phonebook.ui.theme.Brown300
 import com.madcamp.phonebook.ui.theme.Brown400
+import com.madcamp.phonebook.ui.theme.Gray100
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.R)

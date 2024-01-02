@@ -1,5 +1,6 @@
 package com.madcamp.phonebook.presentation.contact
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -31,16 +33,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.madcamp.phonebook.R
 import com.madcamp.phonebook.domain.model.Contact
 import com.madcamp.phonebook.navigation.Screen
 import com.madcamp.phonebook.presentation.component.TextBox
 import com.madcamp.phonebook.presentation.contact.viewModel.ContactUpdateViewModel
 import com.madcamp.phonebook.presentation.contact.viewModel.ContactViewModel
+import com.madcamp.phonebook.ui.theme.Brown200
+import com.madcamp.phonebook.ui.theme.Brown400
 import com.madcamp.phonebook.ui.theme.Gray100
 import com.madcamp.phonebook.ui.theme.Gray200
 import com.madcamp.phonebook.ui.theme.Gray400
@@ -55,18 +61,19 @@ fun ContactDetailScreen(
     val contactNumber by remember { mutableStateOf(navController.currentBackStackEntry?.arguments?.getString("contactNumber") ?: "") }
     val contact by remember { mutableStateOf(
         contactViewModel.contactList.find { it.phoneNumber == contactNumber } ?: Contact()
-        )
+    )
     }
     var contactName by remember { mutableStateOf(contact.name) }
     var contactFavoriteStatus by remember { mutableStateOf(contact.favoriteStatus) }
 
     val contactUpdateViewModel = ContactUpdateViewModel(contact, contactViewModel)
 
-
     Column(
         modifier = Modifier
+            .background(color = Color(0xFFC4BDAC))
             .padding(horizontal = 20.dp, vertical = 50.dp)
             .padding(end = 30.dp)
+            .fillMaxHeight()
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -79,7 +86,13 @@ fun ContactDetailScreen(
                     .size(50.dp)
                     .clickable { navController.popBackStack() },
                 contentDescription = "back_button",
-                tint = Color.Black
+                tint = Brown400
+            )
+
+            Image(
+                painterResource(id = R.drawable.dear_my_logo),
+                contentDescription = "dear_my_logo",
+                modifier = Modifier.size(100.dp)
             )
 
             Icon(
@@ -91,26 +104,42 @@ fun ContactDetailScreen(
                         contact.favoriteStatus = contactFavoriteStatus
                         contactUpdateViewModel.event(2)
                     },
-                contentDescription = "contact_star",
-                tint = Color.Black
+                tint = Brown400,
+                contentDescription = "contact_favorite_status"
             )
         }
         Spacer(modifier = Modifier.height(50.dp))
 
-        Box(
+        Row(
             modifier = Modifier
-                .size(20.dp)
-                .clickable {
-                    isEditmode = true
-                }
-                .align(Alignment.End)
+                .fillMaxWidth()
+                .padding(start = 20.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Icon(
-                imageVector = Icons.Filled.Create,
-                modifier = Modifier.size(20.dp),
-                contentDescription = "edit_mode",
-                tint = if (isEditmode) Gray400 else Color.Black
+            Text(
+                text = "* 이름",
+                fontSize = 13.sp,
+                fontWeight = FontWeight.ExtraBold,
+                fontFamily = FontFamily.SansSerif,
+                color = Brown400
             )
+
+            Box(
+                modifier = Modifier
+                    .size(20.dp)
+                    .clickable {
+                        isEditmode = true
+                    },
+                contentAlignment = Alignment.CenterEnd
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Create,
+                    modifier = Modifier.size(20.dp),
+                    contentDescription = "edit_mode",
+                    tint = if (isEditmode) Gray200 else Brown400
+                )
+            }
         }
         Spacer(modifier = Modifier.height(5.dp))
 
@@ -132,12 +161,14 @@ fun ContactDetailScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(
-                text = "* 관련 정보 이슈로 전화번호는 변경이 불가합니다.",
+                text = "* 전화번호 (변경 불가)",
                 fontSize = 13.sp,
                 fontWeight = FontWeight.ExtraBold,
                 fontFamily = FontFamily.SansSerif,
-                color = Gray400
+                color = Brown400
             )
+
+            Spacer(modifier = Modifier.height(5.dp))
 
             TextBox(
                 type = "phone number",
@@ -149,7 +180,7 @@ fun ContactDetailScreen(
                 textColor = if (isEditmode) Gray400 else Color.Black
             )
         }
-        Spacer(modifier = Modifier.height(70.dp))
+        Spacer(modifier = Modifier.height(50.dp))
 
         Row(
             modifier = Modifier
@@ -162,8 +193,7 @@ fun ContactDetailScreen(
                 modifier = Modifier
                     .size(130.dp, 55.dp)
                     .clip(RoundedCornerShape(50))
-                    .background(Gray200)
-                    .border(1.dp, Color.Black, RoundedCornerShape(50))
+                    .background(Brown400)
                     .clickable {
                         contactViewModel.initiatePhoneCall(contactNumber)
                     },
@@ -173,7 +203,7 @@ fun ContactDetailScreen(
                     imageVector = Icons.Filled.Phone,
                     modifier = Modifier.size(30.dp),
                     contentDescription = "call_button",
-                    tint = Color.Black
+                    tint = Brown200
                 )
             }
 
@@ -181,8 +211,7 @@ fun ContactDetailScreen(
                 modifier = Modifier
                     .size(130.dp, 55.dp)
                     .clip(RoundedCornerShape(50))
-                    .background(Gray200)
-                    .border(1.dp, Color.Black, RoundedCornerShape(50))
+                    .background(Brown400)
                     .clickable {
                         contactViewModel.initiateSendMessage(contactNumber)
                     },
@@ -192,11 +221,11 @@ fun ContactDetailScreen(
                     imageVector = Icons.Filled.Email,
                     modifier = Modifier.size(30.dp),
                     contentDescription = "message_button",
-                    tint = Color.Black
+                    tint = Brown200
                 )
             }
         }
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(25.dp))
 
         if (isEditmode) {
             Box(
@@ -205,8 +234,8 @@ fun ContactDetailScreen(
                     .fillMaxWidth()
                     .height(55.dp)
                     .clip(RoundedCornerShape(50))
-                    .background(Gray200)
-                    .border(1.dp, Color.Black, RoundedCornerShape(50))
+                    .background(Brown400)
+                    .border(1.dp, Color.Transparent, RoundedCornerShape(4))
                     .clickable {
                         contact.name = contactName
                         contactUpdateViewModel.event(1)
@@ -215,8 +244,10 @@ fun ContactDetailScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "완료",
-                    fontSize = 20.sp
+                    text = "저장하기",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Brown200
                 )
             }
         }
