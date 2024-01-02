@@ -11,10 +11,10 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 // add custom colors
-val Blue400 = Color(0xFF29B6F6)
-
 val Gray100 = Color(0XFFF5F5F5)
 val Gray200 = Color(0xFFEEEEEE)
 val Gray400 = Color(0xFFBDBDBD)
 
-val Green300 = Color(0xFFA3C585)
+val Brown200 = Color(0xFFE5DDC9)
+val Brown300 = Color(0xFFC4BDAC)
+val Brown400 = Color(0xFF46433D)

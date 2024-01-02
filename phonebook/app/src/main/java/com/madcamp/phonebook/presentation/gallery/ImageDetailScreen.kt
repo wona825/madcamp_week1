@@ -145,7 +145,6 @@ fun ImageDetailScreen(navController: NavHostController, favorite_list: MutableLi
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .fillMaxSize()
-
                     )
                 }
             }

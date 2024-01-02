@@ -104,9 +104,9 @@ fun ContactListScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    imageVector = if (checkFavoriteStatus) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                    imageVector = Icons.Filled.Favorite,
                     modifier = Modifier
-                        .size(17.dp)
+                        .size(15.dp)
                         .clickable {
                             checkFavoriteStatus = !checkFavoriteStatus
                         },
@@ -123,7 +123,7 @@ fun ContactListScreen(
                     modifier = Modifier.clickable { checkFavoriteStatus = !checkFavoriteStatus }
                 )
             }
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             if (sortedGrouped.isNotEmpty()) {
                 LazyColumn {
