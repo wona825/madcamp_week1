@@ -2,31 +2,46 @@ package com.madcamp.phonebook.presentation.gallery
 
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
+import android.graphics.Paint.Align
 import android.os.Build
 import android.provider.MediaStore
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
@@ -43,19 +58,33 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.madcamp.phonebook.R
 import com.madcamp.phonebook.domain.model.Diary
+import com.madcamp.phonebook.presentation.Diary.component.IconDropBox
 import com.madcamp.phonebook.presentation.Diary.viewmodel.DiaryViewModel
+import com.madcamp.phonebook.presentation.component.TextBox
+import com.madcamp.phonebook.presentation.contact.formatPhoneNumber
+import com.madcamp.phonebook.presentation.gallery.component.GalleryIconDropBox
+import com.madcamp.phonebook.presentation.gallery.component.getScreenWidth
+import com.madcamp.phonebook.ui.theme.Brown200
+import com.madcamp.phonebook.ui.theme.Brown400
+import com.madcamp.phonebook.ui.theme.Gray100
+import com.madcamp.phonebook.ui.theme.Gray200
+import com.madcamp.phonebook.ui.theme.Gray400
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -67,54 +96,245 @@ fun ImageDetailScreen(navController: NavHostController, diaryViewModel: DiaryVie
     var name by remember { mutableStateOf("#Favorite") }
     val keyboardController = LocalSoftwareKeyboardController.current
     val indexOfDiary = diaryViewModel.diaryList.indexOf(diary)
+    val screenWidth = getScreenWidth(LocalContext.current)
+    val iconWidth = screenWidth / 2
 
-    Column(
-        modifier = Modifier.padding(20.dp)
-    ) {
+    var isEditMode by remember { mutableStateOf(false) }
+    var diaryLikeStatus by remember { mutableStateOf(diaryViewModel.diaryList[indexOfDiary].love) }
+    var diaryNameStatus by remember { mutableStateOf(diaryViewModel.diaryList[indexOfDiary].name) }
+    var diaryDescriptionStatus by remember { mutableStateOf(diaryViewModel.diaryList[indexOfDiary].description) }
+    var diaryIconStatus by remember { mutableStateOf(diaryViewModel.diaryList[indexOfDiary].icon) }
+    val scrollState =  rememberScrollState()
 
-        // 1st Line
-        Box(
+        Column(
             modifier = Modifier
-                .weight(1f)
-        ){
-            Row(){
+                .background(color = Color(0xFFC4BDAC))
+                .padding(horizontal = 20.dp, vertical = 50.dp)
+                .fillMaxSize()
+        ) {
+            Box(modifier = Modifier.weight(1f)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    androidx.compose.material.Icon(
+                        imageVector = Icons.Filled.KeyboardArrowLeft,
+                        modifier = Modifier
+                            .size(50.dp)
+                            .clickable { navController.popBackStack() },
+                        contentDescription = "back_button",
+                        tint = Brown400
+                    )
 
-                // Return Button
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .clickable {
-                            navController.popBackStack()
-                        }
-                ){
-                    Icon(imageVector = Icons.Default.Close, contentDescription = null, modifier = Modifier
-                        .fillMaxSize() // Adjust the size of the icon
-                        .padding(end = 8.dp)  // Adjust the padding if needed
-                        .align(Alignment.Center))
-                }
+                    Image(
+                        painterResource(id = R.drawable.dear_my_logo),
+                        contentDescription = "dear_my_logo",
+                        modifier = Modifier.size(100.dp)
+                    )
 
-                // Empty Box
-                Box(
-                    modifier = Modifier
-                        .weight(6f)
-                ){
-                }
-
-                // Trash Bin
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .clickable {
-                            diaryViewModel.diaryList -= diary
-                            navController.popBackStack()
-                        }
-                ){
-                    Icon(imageVector = Icons.Default.Delete, contentDescription = null, modifier = Modifier
-                        .fillMaxSize() // Adjust the size of the icon
-                        .padding(end = 8.dp)  // Adjust the padding if needed
-                        .align(Alignment.Center))
+                    Icon(
+                        imageVector = if (diaryLikeStatus) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                        modifier = Modifier
+                            .size(35.dp)
+                            .clickable {
+                                diaryLikeStatus = !diaryLikeStatus
+                                diaryViewModel.diaryList[indexOfDiary].love = diaryLikeStatus
+                            },
+                        contentDescription = "like_or_not",
+                        tint = Brown400
+                    )
                 }
             }
+            Box(modifier = Modifier.padding(20.dp).fillMaxWidth().weight(6f)) {
+                Column(modifier = Modifier.verticalScroll(scrollState)) {
+                    Box(
+                        modifier = Modifier
+                            .size(width = iconWidth.dp, height = iconWidth.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if (!isEditMode) {
+                            when (diaryIconStatus) {
+                                1 -> Image(
+                                    painter = painterResource(id = R.drawable.dog_1),
+                                    contentDescription = null,
+                                    modifier = Modifier.fillMaxSize()
+                                )
+
+                                2 -> Image(
+                                    painter = painterResource(id = R.drawable.dog_2),
+                                    contentDescription = null,
+                                    modifier = Modifier.fillMaxSize()
+                                )
+
+                                3 -> Image(
+                                    painter = painterResource(id = R.drawable.dog_3),
+                                    contentDescription = null,
+                                    modifier = Modifier.fillMaxSize()
+                                )
+
+                                4 -> Image(
+                                    painter = painterResource(id = R.drawable.dog_4),
+                                    contentDescription = null,
+                                    modifier = Modifier.fillMaxSize()
+                                )
+
+                                5 -> Image(
+                                    painter = painterResource(id = R.drawable.dog_5),
+                                    contentDescription = null,
+                                    modifier = Modifier.fillMaxSize()
+                                )
+
+                                else -> {}
+                            }
+                        } else {
+                            GalleryIconDropBox(iconValue = mutableStateOf(diaryIconStatus))
+                        }
+                    }
+
+                    Box() {
+                        if (!isEditMode) {
+                            Text(
+                                text = diaryNameStatus,
+                                fontSize = 30.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                fontFamily = FontFamily.SansSerif,
+                                color = Brown400
+                            )
+                        } else {
+                            androidx.compose.material.Text(
+                                text = "* 제목",
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                fontFamily = FontFamily.SansSerif,
+                                color = Brown400
+                            )
+
+                            Spacer(modifier = Modifier.height(5.dp))
+
+                            TextBox(
+                                type = "Title",
+                                text = diaryNameStatus,
+                                width = 320.dp,
+                                height = 65.dp,
+                                boxColor = Gray100,
+                                readOnly = !isEditMode,
+                                onValueChange = { newText ->
+                                    diaryNameStatus = newText
+                                    diaryViewModel.diaryList[indexOfDiary].name = diaryNameStatus
+                                }
+                            )
+                        }
+                    }
+
+                    Box() {
+                        if (!isEditMode) {
+                            Text(
+                                text = diaryDescriptionStatus,
+                                fontSize = 19.sp,
+                                fontFamily = FontFamily.SansSerif,
+                                color = Brown400
+                            )
+                        } else {
+                            androidx.compose.material.Text(
+                                text = "* 내용",
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                fontFamily = FontFamily.SansSerif,
+                                color = Brown400
+                            )
+
+                            Spacer(modifier = Modifier.height(5.dp))
+
+                            TextBox(
+                                type = "Title",
+                                text = diaryNameStatus,
+                                width = 320.dp,
+                                height = 200.dp,
+                                boxColor = Gray100,
+                                readOnly = !isEditMode,
+                                onValueChange = { newText ->
+                                    diaryDescriptionStatus = newText
+                                    diaryViewModel.diaryList[indexOfDiary].description =
+                                        diaryNameStatus
+                                }
+                            )
+                        }
+                    }
+
+                }
+            }
+
+            Box(modifier = Modifier.weight(1f)){
+                if (!isEditMode) {
+                    Box(
+                        modifier = Modifier
+                            .padding(start = 20.dp)
+                            .fillMaxWidth()
+                            .height(55.dp)
+                            .clip(RoundedCornerShape(50))
+                            .background(Brown400)
+                            .clickable { isEditMode = !isEditMode }
+                            .border(1.dp, Color.Transparent, RoundedCornerShape(4))
+                        ,
+                        contentAlignment = Alignment.Center
+                    ) {
+                        androidx.compose.material.Icon(
+                            imageVector = Icons.Filled.Edit,
+                            modifier = Modifier
+                                .size(30.dp)
+                            ,
+                            contentDescription = "Edit",
+                            tint = Brown200
+                        )
+                    }
+
+                }
+                else{
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 20.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(130.dp, 55.dp)
+                                .clip(RoundedCornerShape(50))
+                                .background(Brown400),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            androidx.compose.material.Icon(
+                                imageVector = Icons.Filled.Add,
+                                modifier = Modifier
+                                    .size(30.dp)
+                                    .clickable { isEditMode = !isEditMode },
+                                contentDescription = "Finish",
+                                tint = Brown200
+                            )
+                        }
+
+                        Box(
+                            modifier = Modifier
+                                .size(130.dp, 55.dp)
+                                .clip(RoundedCornerShape(50))
+                                .background(Brown400),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            androidx.compose.material.Icon(
+                                imageVector = Icons.Filled.Delete,
+                                modifier = Modifier.size(30.dp),
+                                contentDescription = "message_button",
+                                tint = Brown200
+                            )
+                        }
+                    }
+                }
+
+            }
+
+                    }
         }
 
         // 2nd Line, Image
@@ -351,6 +571,3 @@ fun ImageDetailScreen(navController: NavHostController, diaryViewModel: DiaryVie
 //            }
 //        }
 
-    }
-
-}
