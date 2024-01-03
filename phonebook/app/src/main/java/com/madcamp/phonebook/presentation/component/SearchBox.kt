@@ -1,8 +1,8 @@
 package com.madcamp.phonebook.presentation.component
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
@@ -14,7 +14,6 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
@@ -39,7 +38,9 @@ fun SearchBox(
 
     TextField(
         modifier = Modifier
-            .size(370.dp, 50.dp)
+            .fillMaxWidth()
+            .height(50.dp)
+//            .size(370.dp, 50.dp)
 //            .clip(RoundedCornerShape(50))
             .clickable {},
         textStyle = TextStyle(

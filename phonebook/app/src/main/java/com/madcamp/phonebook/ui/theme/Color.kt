@@ -18,3 +18,5 @@ val Gray400 = Color(0xFFBDBDBD)
 val Brown200 = Color(0xFFE5DDC9)
 val Brown300 = Color(0xFFC4BDAC)
 val Brown400 = Color(0xFF46433D)
+
+val Orange400 = Color(0xFFED9121)

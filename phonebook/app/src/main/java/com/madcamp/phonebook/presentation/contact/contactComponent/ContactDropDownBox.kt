@@ -1,5 +1,6 @@
 package com.madcamp.phonebook.presentation.contact.contactComponent
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import com.madcamp.phonebook.domain.model.Contact
 import com.madcamp.phonebook.presentation.contact.formatPhoneNumber
+import com.madcamp.phonebook.ui.theme.Brown400
 import com.madcamp.phonebook.ui.theme.Gray100
 
 @Composable
@@ -42,7 +44,8 @@ fun ContactDropDownBox(
                 .width(370.dp)
                 .height(50.dp)
                 .padding(0.dp)
-                .clip(RoundedCornerShape(50))
+                .clip(RoundedCornerShape(20))
+                .border(1.dp, Brown400, RoundedCornerShape(20))
                 .onGloballyPositioned { coordinates ->
                     textFieldSize = coordinates.size.toSize()
                 },
@@ -59,7 +62,7 @@ fun ContactDropDownBox(
                 backgroundColor = Gray100
             ),
             textStyle = TextStyle(
-                fontSize = 16.sp,
+                fontSize = 13.sp,
                 fontWeight = FontWeight.SemiBold
             ),
             trailingIcon = {
