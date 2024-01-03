@@ -11,8 +11,8 @@ import io.ktor.http.contentType
 
 object ContactUpdateRepository {
     suspend fun fetchUsers(contact: Contact, type: Int): List<ContactResponse> {
-        val nameUrl = "http://ec2-3-36-76-237.ap-northeast-2.compute.amazonaws.com:8080/api/phone/update-name"
-        val favoriteUrl = "http://ec2-3-36-76-237.ap-northeast-2.compute.amazonaws.com:8080/api/phone/update-favorite"
+        val nameUrl = "update_contact_name_url"
+        val favoriteUrl = "update_contact_favorite_url"
         val url = if (type == 1) nameUrl else favoriteUrl
 
         val httpClient = HttpClient {
