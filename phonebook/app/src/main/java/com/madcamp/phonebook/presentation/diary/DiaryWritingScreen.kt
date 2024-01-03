@@ -1,6 +1,5 @@
 package com.madcamp.phonebook.presentation.diary
 
-import android.app.AlertDialog
 import android.net.Uri
 import android.os.Build
 import android.widget.Toast
@@ -42,10 +41,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.madcamp.phonebook.MainActivity
 import com.madcamp.phonebook.domain.model.Contact
 import com.madcamp.phonebook.domain.model.Diary
-import com.madcamp.phonebook.navigation.Screen
 import com.madcamp.phonebook.presentation.diary.component.ChooseImage
 import com.madcamp.phonebook.presentation.diary.component.IconDropBox
 import com.madcamp.phonebook.presentation.diary.viewmodel.DiaryViewModel
@@ -73,11 +70,10 @@ fun DiaryWritingScreen(
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var like by remember {mutableStateOf(false)}
-    var iconValue: MutableState<Int> = remember {mutableStateOf(-1)}
-    var imageUriValue: MutableState<Uri?> = remember {mutableStateOf(null)}
-    var contact: MutableState<Contact> =  remember {mutableStateOf(Contact("", "", false))}
+    val iconValue: MutableState<Int> = remember {mutableStateOf(-1)}
+    val imageUriValue: MutableState<Uri?> = remember {mutableStateOf(null)}
+    var contact: Contact =  remember { Contact("", "", false) }
     val context = LocalContext.current
-    val screen = Screen()
 
     val contactFavoriteList = contactViewModel.contactList.filter {
         it.favoriteStatus
@@ -89,10 +85,10 @@ fun DiaryWritingScreen(
     }
 
 
-    val newDiary = Diary("", iconValue.value, imageUriValue.value, like, "", formattedDate, contact.value)
+    val newDiary = Diary("", iconValue.value, imageUriValue.value, like, "", formattedDate, contact)
 
     Column(
-        modifier = Modifier.padding(20.dp)
+        modifier = Modifier.padding(15.dp)
     ) {
         // Date
         Text(
@@ -100,6 +96,7 @@ fun DiaryWritingScreen(
             fontSize = 18.sp,
             textAlign = TextAlign.Center,
             color = Color.Black,
+            fontWeight = FontWeight.SemiBold,
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -136,7 +133,9 @@ fun DiaryWritingScreen(
 
             // Contact Tag, LikeOrNot
             Row(){
-                Box(modifier = Modifier.weight(6f)){ ContactDropDownBox(itemList = contactDropDownList, contact) }
+                Box(modifier = Modifier.weight(6f)) {
+                    contact = ContactDropDownBox(itemList = contactDropDownList)
+                }
                 Box(modifier = Modifier
                     .weight(1f)
                     .padding(top = 15.dp), contentAlignment = Alignment.BottomCenter){
@@ -194,7 +193,12 @@ fun DiaryWritingScreen(
                                 newDiary.description = description
                                 newDiary.icon = iconValue.value
                                 newDiary.dateTime = formattedDate
-                                newDiary.contact = contact.value
+                                newDiary.favoriteStatus = like
+                                if ((contact.name == "선택 안함") || (contact.phoneNumber == "선택 안함")) {
+                                    contact.name = ""
+                                    contact.phoneNumber = ""
+                                }
+                                newDiary.contact = contact
                                 diaryViewModel.diaryList += newDiary
                                 navController.popBackStack()
                             }
@@ -214,3 +218,4 @@ fun DiaryWritingScreen(
         }
     }
 }
+

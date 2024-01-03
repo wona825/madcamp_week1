@@ -40,7 +40,7 @@ fun SearchBox(
     TextField(
         modifier = Modifier
             .size(370.dp, 50.dp)
-            .clip(RoundedCornerShape(50))
+//            .clip(RoundedCornerShape(50))
             .clickable {},
         textStyle = TextStyle(
             fontSize = 14.sp,
@@ -51,7 +51,7 @@ fun SearchBox(
         placeholder = {
             Text(
                 text = placeholder,
-                fontSize = 14.sp,
+                fontSize = 15.sp,
                 fontWeight = FontWeight.Bold
             )
         },

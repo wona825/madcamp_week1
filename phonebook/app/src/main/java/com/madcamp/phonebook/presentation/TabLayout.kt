@@ -9,7 +9,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Face
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,7 +25,7 @@ import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.madcamp.phonebook.R
-import com.madcamp.phonebook.presentation.Diary.DiaryBeginScreen
+import com.madcamp.phonebook.presentation.diary.DiaryBeginScreen
 import com.madcamp.phonebook.presentation.contact.ContactListScreen
 import com.madcamp.phonebook.presentation.contact.viewModel.ContactViewModel
 import com.madcamp.phonebook.presentation.gallery.GalleryScreen
@@ -39,7 +39,7 @@ import kotlinx.coroutines.launch
 @ExperimentalPagerApi
 @Composable
 fun TabLayout(
-    ContactViewModel: ContactViewModel,
+    contactViewModel: ContactViewModel,
     diaryViewModel: DiaryViewModel,
     navController: NavController
 ) {
@@ -62,7 +62,12 @@ fun TabLayout(
             }
         }
         Tabs(pagerState = pagerState)
-        TabsContent(pagerState = pagerState, ContactViewModel = ContactViewModel, diaryViewModel, navController = navController)
+        TabsContent(
+            pagerState = pagerState,
+            contactViewModel = contactViewModel,
+            diaryViewModel = diaryViewModel,
+            navController = navController
+        )
     }
 }
 
@@ -71,8 +76,8 @@ fun TabLayout(
 fun Tabs(pagerState: PagerState) {
     val list = listOf(
         "Friends" to Icons.Default.Call,
-        "Favorites" to Icons.Default.Favorite,
-        "Journal" to Icons.Default.Edit
+        "Memories" to Icons.Default.Face,
+        "Diary" to Icons.Default.Edit
     )
     val scope = rememberCoroutineScope()
     TabRow(
@@ -90,8 +95,12 @@ fun Tabs(pagerState: PagerState) {
         list.forEachIndexed { index, _ ->
             Tab(
                 icon = {
-                    Icon(imageVector = list[index].second, contentDescription = null,
-                        tint = if (pagerState.currentPage == index) Brown400 else Brown200)
+                    Icon(
+                        imageVector = list[index].second,
+                        contentDescription = null,
+                        tint = if (pagerState.currentPage == index) Brown400 else Brown200,
+                        modifier = Modifier.size(if (index == 1) 28.dp else 24.dp)
+                    )
                 },
                 text = {
                     Text(
@@ -115,7 +124,7 @@ fun Tabs(pagerState: PagerState) {
 @Composable
 fun TabsContent(
     pagerState: PagerState,
-    ContactViewModel: ContactViewModel,
+    contactViewModel: ContactViewModel,
     diaryViewModel: DiaryViewModel,
     navController: NavController,
     onClick: () -> Unit = {}
@@ -124,7 +133,7 @@ fun TabsContent(
     HorizontalPager(state = pagerState) { page ->
 
             when (page) {
-                0 -> ContactListScreen(navController, ContactViewModel)
+                0 -> ContactListScreen(navController, contactViewModel)
                 1 -> GalleryScreen(navController = navController, diaryViewModel)
                 2 -> DiaryBeginScreen(navController = navController, diaryViewModel)
             }

@@ -48,11 +48,11 @@ fun ShowIconForEachDay(diaryList: List<Diary>){
 
     var filteredDiaryList by remember { mutableStateOf(emptyList<Diary>()) }
     diaryList.forEach{
-        diary ->  diary.dateTime?.let{
-                dt -> if(dt.contains(currentYear + "." + currentMonth)){
-                    filteredDiaryList += diary
-                }
-            }
+            diary ->  diary.dateTime?.let{
+            dt -> if(dt.contains(currentYear + "." + currentMonth)){
+        filteredDiaryList += diary
+    }
+    }
     }
 
     val numberOfDiaries  = filteredDiaryList.size
