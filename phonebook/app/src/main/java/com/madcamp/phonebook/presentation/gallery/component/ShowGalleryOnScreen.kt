@@ -33,49 +33,50 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.madcamp.phonebook.MainActivity
 import com.madcamp.phonebook.R
-import com.madcamp.phonebook.presentation.gallery.favorites.favorites
+import com.madcamp.phonebook.domain.model.Diary
+import com.madcamp.phonebook.presentation.diary.viewmodel.DiaryViewModel
 
 
 @RequiresApi(Build.VERSION_CODES.R)
 @Composable
-fun ShowGalleryOnScreen(navController: NavController, favoritelist: MutableList<favorites>){
+fun ShowGalleryOnScreen(navController: NavController, diaryViewModel: DiaryViewModel){
 
-        for (index in favoritelist.indices step 3) {
+    val diaryList = diaryViewModel.diaryList
+        for (index in diaryViewModel.diaryList.indices step 3) {
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 //horizontalArrangement = Arrangement.SpaceBetween // Arrange child elements with even space
             ) {
 
-                favoritelist.removeAll { it.valid == false } // Remove all invalid data.
 
                 // Elem1 (Item)
                 ShowItemOnScreen(
                     navController,
-                    favorite = favoritelist[index],
-                    favorite_list = favoritelist
+                    diaryList[index],
+                    diaryViewModel
                 )
 
                 // Elem2. Second Item
-                if ((index + 1) == favoritelist.size) {
+                if ((index + 1) == diaryList.size) {
                     // do nothing
 
-                } else if ((index + 2) == favoritelist.size) {
+                } else if ((index + 2) == diaryList.size) {
                     ShowItemOnScreen(
                         navController,
-                        favorite = favoritelist[index + 1],
-                        favorite_list = favoritelist
+                        diaryList[index + 1],
+                        diaryViewModel
                     )
                 } else {
                     ShowItemOnScreen(
                         navController,
-                        favorite = favoritelist[index + 1],
-                        favorite_list = favoritelist
+                        diaryList[index + 1],
+                        diaryViewModel
                     )
                     ShowItemOnScreen(
                         navController,
-                        favorite = favoritelist[index + 2],
-                        favorite_list = favoritelist
+                        diaryList[index + 2],
+                        diaryViewModel
                     )
                 }
 
@@ -88,13 +89,13 @@ fun ShowGalleryOnScreen(navController: NavController, favoritelist: MutableList<
 // Show each item on the screen. Each item consists of image and the description. (2 elements)
 @RequiresApi(Build.VERSION_CODES.R)
 @Composable
-fun ShowItemOnScreen(navController: NavController, favorite: favorites, favorite_list: MutableList<favorites>){
+fun ShowItemOnScreen(navController: NavController, diary: Diary, diaryViewModel: DiaryViewModel){
 
     val screenWidth = (getScreenWidth(LocalContext.current).toDouble() / 3).toInt()
 
     Column{
         // Elem1. image
-        ShowImage(navController, favorite = favorite, favorite_list = favorite_list)
+        ShowImage(navController, diary, diaryViewModel)
         // Elem2. text
         Box(
             modifier = Modifier
@@ -106,14 +107,14 @@ fun ShowItemOnScreen(navController: NavController, favorite: favorites, favorite
                     modifier = Modifier
                         .weight(4f)
                 ) {
-                    ShowImageInformation(favorite, favorite_list)
+                    ShowImageInformation(diary, diaryViewModel)
                 }
 
                 Box(
                     modifier = Modifier
                         .weight(1f)
                 ) {
-                    when (favorite.icon) {
+                    when (diary.icon) {
                         1 -> Image(painter = painterResource(id = R.drawable.dog_1), contentDescription = null, modifier = Modifier.size(30.dp))
                         2 -> Image(painter = painterResource(id = R.drawable.dog_2), contentDescription = null, modifier = Modifier.size(30.dp))
                         3 -> Image(painter = painterResource(id = R.drawable.dog_3), contentDescription = null, modifier = Modifier.size(30.dp))
@@ -128,7 +129,7 @@ fun ShowItemOnScreen(navController: NavController, favorite: favorites, favorite
                         .weight(1f)
                 ) {
                         Icon(
-                            imageVector = if (favorite.love) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                            imageVector = if (diary.love) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                             contentDescription = null,
                             modifier = Modifier
                                 .fillMaxSize() // Adjust the size of the icon

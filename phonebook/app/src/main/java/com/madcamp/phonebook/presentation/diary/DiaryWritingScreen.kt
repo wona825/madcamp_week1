@@ -1,5 +1,6 @@
 package com.madcamp.phonebook.presentation.diary
 
+import android.app.AlertDialog
 import android.net.Uri
 import android.os.Build
 import android.widget.Toast
@@ -41,14 +42,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.madcamp.phonebook.MainActivity
 import com.madcamp.phonebook.domain.model.Contact
+import com.madcamp.phonebook.domain.model.Diary
 import com.madcamp.phonebook.navigation.Screen
 import com.madcamp.phonebook.presentation.diary.component.ChooseImage
 import com.madcamp.phonebook.presentation.diary.component.IconDropBox
+import com.madcamp.phonebook.presentation.diary.viewmodel.DiaryViewModel
 import com.madcamp.phonebook.presentation.component.TextBox
 import com.madcamp.phonebook.presentation.contact.contactComponent.ContactDropDownBox
 import com.madcamp.phonebook.presentation.contact.viewModel.ContactViewModel
-import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 import com.madcamp.phonebook.ui.theme.Gray100
 import com.madcamp.phonebook.ui.theme.Gray400
 import java.time.LocalDate
@@ -58,7 +61,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun DiaryWritingScreen(
     navController: NavController,
-    favoriteList: MutableList<favorites>,
+    diaryViewModel: DiaryViewModel,
     contactViewModel: ContactViewModel,
     scrollState: ScrollState = rememberScrollState()
 ) {
@@ -70,10 +73,9 @@ fun DiaryWritingScreen(
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var like by remember {mutableStateOf(false)}
-    var icon by remember{mutableStateOf(-1)}
     var iconValue: MutableState<Int> = remember {mutableStateOf(-1)}
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
     var imageUriValue: MutableState<Uri?> = remember {mutableStateOf(null)}
+    var contact: MutableState<Contact> =  remember {mutableStateOf(Contact("", "", false))}
     val context = LocalContext.current
     val screen = Screen()
 
@@ -87,7 +89,7 @@ fun DiaryWritingScreen(
     }
 
 
-    val newFavorites = favorites("", icon, imageUri, like, "", true, formattedDate)
+    val newDiary = Diary("", iconValue.value, imageUriValue.value, like, "", formattedDate, contact.value)
 
     Column(
         modifier = Modifier.padding(20.dp)
@@ -128,13 +130,13 @@ fun DiaryWritingScreen(
 
             // Image
             ChooseImage(imageUriValue)
-            newFavorites.image = imageUriValue.value
+            newDiary.image = imageUriValue.value
 
             Spacer(modifier = Modifier.height(10.dp))
 
             // Contact Tag, LikeOrNot
             Row(){
-                Box(modifier = Modifier.weight(6f)){ ContactDropDownBox(itemList = contactDropDownList) }
+                Box(modifier = Modifier.weight(6f)){ ContactDropDownBox(itemList = contactDropDownList, contact) }
                 Box(modifier = Modifier
                     .weight(1f)
                     .padding(top = 15.dp), contentAlignment = Alignment.BottomCenter){
@@ -186,14 +188,21 @@ fun DiaryWritingScreen(
                 FilledTonalButton(
                     onClick = {
 
-                        newFavorites.image?.let{
-                            newFavorites.name = title
-                            newFavorites.description = description
-                            newFavorites.icon = iconValue.value
-                            favoriteList.add(newFavorites)
-                            navController.popBackStack()
+                        newDiary.image?.let{
+                            if(iconValue.value != -1) {
+                                newDiary.name = title
+                                newDiary.description = description
+                                newDiary.icon = iconValue.value
+                                newDiary.dateTime = formattedDate
+                                newDiary.contact = contact.value
+                                diaryViewModel.diaryList += newDiary
+                                navController.popBackStack()
+                            }
+                            else{
+                                Toast.makeText(context, "Please add an icon", Toast.LENGTH_SHORT).show()
+                            }
                         }
-                        if (newFavorites.image == null){
+                        if (newDiary.image == null){
                             Toast.makeText(context, "Please add an image", Toast.LENGTH_SHORT).show()
                         }
                     },

@@ -10,30 +10,25 @@ import android.os.Build
 import androidx.activity.compose.setContent
 import android.os.Bundle
 import android.provider.ContactsContract
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.annotation.RequiresApi
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import com.madcamp.phonebook.domain.model.Contact
+import com.madcamp.phonebook.domain.model.Diary
 import com.madcamp.phonebook.navigation.NavGraph
-import com.madcamp.phonebook.presentation.gallery.favorites.favorites
 import com.madcamp.phonebook.presentation.contact.viewModel.ContactViewModel
 import com.madcamp.phonebook.ui.theme.PhonebookTheme
 
 class MainActivity : ComponentActivity(), ContactViewModel.PhoneCallListener, ContactViewModel.SendMessageListener {
     private lateinit var contactViewModel: ContactViewModel
 
-
-    private var getlist: MutableList<favorites> =  mutableListOf<favorites>()  // list of favorites
-
+    var diaryList by mutableStateOf<List<Diary>>(emptyList())
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?)
@@ -48,7 +43,7 @@ class MainActivity : ComponentActivity(), ContactViewModel.PhoneCallListener, Co
 
         setContent {
             PhonebookTheme {
-                NavGraph(activity = this, contactViewModel = contactViewModel, favoriteList = getlist)
+                NavGraph(activity = this, contactViewModel = contactViewModel, diaryList)
             }
         }
 

@@ -29,25 +29,22 @@ import androidx.navigation.NavController
 import com.madcamp.phonebook.presentation.gallery.component.SearchImage
 import com.madcamp.phonebook.presentation.gallery.component.ShowGalleryOnScreen
 import com.madcamp.phonebook.domain.model.Contact
-import com.madcamp.phonebook.presentation.gallery.favorites.favorites
+import com.madcamp.phonebook.domain.model.Diary
+import com.madcamp.phonebook.presentation.diary.viewmodel.DiaryViewModel
 
 @RequiresApi(Build.VERSION_CODES.R)
 @Composable
-fun GalleryScreen(navController: NavController, favoritelist: MutableList<favorites>){
-
-    var permFlag by remember{ mutableStateOf(false) } // Does permission flag is on or not?
-    var permIsGrantedFlag by remember{ mutableStateOf(false) } // Does check is granted or not?
-    var permPrecheckedFlag by remember{ mutableStateOf(false) }  // Onclick makes authority check and make pre_checked.
-    var storageAccessFlag by remember{ mutableStateOf(false) }  // Onclick makes image accessing.
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
-
+fun GalleryScreen(
+    navController: NavController,
+    diaryViewModel: DiaryViewModel
+){
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(0.dp)
     ){
-        SearchImage(favoritelist = favoritelist)
+        SearchImage()
 
 
         Box(
@@ -59,7 +56,7 @@ fun GalleryScreen(navController: NavController, favoritelist: MutableList<favori
 
                 item {
 
-                    ShowGalleryOnScreen(navController, favoritelist = favoritelist)
+                    ShowGalleryOnScreen(navController, diaryViewModel)
 
                 }
             }

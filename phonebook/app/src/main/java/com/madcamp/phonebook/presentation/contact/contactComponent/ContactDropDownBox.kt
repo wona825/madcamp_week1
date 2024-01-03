@@ -25,7 +25,8 @@ import com.madcamp.phonebook.ui.theme.Gray100
 
 @Composable
 fun ContactDropDownBox(
-    itemList : List<Contact>
+    itemList : List<Contact>,
+    contact: MutableState<Contact>
 ){
     var expanded by remember { mutableStateOf(false) }
     var selected by remember { mutableStateOf(itemList[0]) }
@@ -78,6 +79,10 @@ fun ContactDropDownBox(
                     selected = label
                     expanded = false
                 }) {
+                    val contactContent = contact.value
+                    contactContent.name = label.name
+                    contactContent.favoriteStatus = label.favoriteStatus
+                    contactContent.phoneNumber = label.phoneNumber
                     Text(
                         text = label.name + " (" + formatPhoneNumber(label.phoneNumber) + ")",
                         fontSize = 16.sp,

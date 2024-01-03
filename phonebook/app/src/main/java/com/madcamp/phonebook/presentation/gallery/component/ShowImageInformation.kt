@@ -28,19 +28,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.madcamp.phonebook.MainActivity
-import com.madcamp.phonebook.presentation.gallery.favorites.favorites
+import com.madcamp.phonebook.domain.model.Diary
+import com.madcamp.phonebook.presentation.diary.viewmodel.DiaryViewModel
 
 
 // Get an image name from user.
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun ShowImageInformation(favorite: favorites, favorite_list: MutableList<favorites>){
+fun ShowImageInformation(diary: Diary, diaryViewModel: DiaryViewModel){
 
     var clickFlag by remember{ mutableStateOf(false) }
     var text by remember { mutableStateOf("Edit") }
     val keyboardController = LocalSoftwareKeyboardController.current
-    val indexOfFavorite = favorite_list.indexOf(favorite)
+    val indexOfFavorite = diaryViewModel.diaryList.indexOf(diary)
     val screenWidth = ((getScreenWidth(LocalContext.current).toDouble()) / 3).toInt()
 
     Box(
@@ -68,7 +68,7 @@ fun ShowImageInformation(favorite: favorites, favorite_list: MutableList<favorit
                 keyboardActions = KeyboardActions(
                     onDone = {
                         clickFlag = !clickFlag
-                        favorite_list[indexOfFavorite].name = "#" + text
+                        diaryViewModel.diaryList[indexOfFavorite].name = "#" + text
                         keyboardController?.hide()
                     }
                 ),
@@ -81,7 +81,7 @@ fun ShowImageInformation(favorite: favorites, favorite_list: MutableList<favorit
         else{
             Text(
                 fontSize = 15.sp,
-                text = favorite.name,
+                text = diary.name,
                 color = Color.Black,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
