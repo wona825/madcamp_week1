@@ -20,15 +20,16 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.madcamp.phonebook.domain.model.Diary
 import com.madcamp.phonebook.navigation.Screen
+import com.madcamp.phonebook.presentation.diary.viewmodel.DiaryViewModel
 
 // Show each image on the screen.
 @RequiresApi(Build.VERSION_CODES.R)
 @Composable
-fun ShowImage(navController:NavController, diary: Diary, diaryList: List<Diary>){
+fun ShowImage(navController:NavController, diary: Diary, diaryList: List<Diary>, diaryViewModel: DiaryViewModel) {
 
     val bitmap = remember { mutableStateOf<Bitmap?>(null) }
     val imageUri = diary.image
-    val indexOfDiary = diaryList.indexOf(diary)
+    val indexOfDiary = diaryViewModel.diaryList.indexOf(diary)
 
     val context = LocalContext.current
     val screen = Screen()

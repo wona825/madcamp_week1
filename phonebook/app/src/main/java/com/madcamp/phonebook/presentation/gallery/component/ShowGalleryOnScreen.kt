@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
 import com.madcamp.phonebook.domain.model.Diary
+import com.madcamp.phonebook.presentation.diary.viewmodel.DiaryViewModel
 import com.madcamp.phonebook.ui.theme.Gray400
 
 
@@ -23,8 +24,7 @@ import com.madcamp.phonebook.ui.theme.Gray400
 fun ShowGalleryOnScreen(
     navController: NavController,
     diaryList: List<Diary>,
-    search: String,
-    checkFavoriteStatus: Boolean
+    diaryViewModel: DiaryViewModel
 ) {
     if (diaryList.isNotEmpty()) {
         for (index in diaryList.indices step 3) {
@@ -37,7 +37,8 @@ fun ShowGalleryOnScreen(
                 ShowImage(
                     navController,
                     diaryList[index],
-                    diaryList
+                    diaryList,
+                    diaryViewModel
                 )
 
                 // Elem2. Second Item
@@ -48,18 +49,21 @@ fun ShowGalleryOnScreen(
                     ShowImage(
                         navController,
                         diaryList[index + 1],
-                        diaryList
+                        diaryList,
+                        diaryViewModel
                     )
                 } else {
                     ShowImage(
                         navController,
                         diaryList[index + 1],
-                        diaryList
+                        diaryList,
+                        diaryViewModel
                     )
                     ShowImage(
                         navController,
                         diaryList[index + 2],
-                        diaryList
+                        diaryList,
+                        diaryViewModel
                     )
                 }
             }

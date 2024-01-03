@@ -114,7 +114,7 @@ fun GalleryScreen(
                 contentPadding = PaddingValues(0.dp, 0.dp)
             ) {
                 item {
-                    ShowGalleryOnScreen(navController, filteredDiaryList, search, checkFavoriteStatus)
+                    ShowGalleryOnScreen(navController, filteredDiaryList, diaryViewModel)
                 }
             }
         }
