@@ -64,12 +64,11 @@ fun GalleryScreen(
         diaryList
     }
 
-
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(0.dp)
-    ){
+    ) {
         SearchBox(
             text = search,
             placeholder = "제목, 내용, 날짜, 연락처로 검색하기",

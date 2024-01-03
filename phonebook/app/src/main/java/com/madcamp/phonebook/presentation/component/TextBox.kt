@@ -29,7 +29,7 @@ fun TextBox(
     boxColor: Color,
     textColor: Color = Color.Black,
     readOnly: Boolean,
-    fontSize: Int = 22
+    fontSize: Int = 21
 ) {
     TextField(
         modifier = Modifier
@@ -45,7 +45,7 @@ fun TextBox(
         placeholder = {
             Text(
                 text = type,
-                fontSize = 20.sp,
+                fontSize = fontSize.sp,
                 fontWeight = FontWeight.Bold
             )
         },
