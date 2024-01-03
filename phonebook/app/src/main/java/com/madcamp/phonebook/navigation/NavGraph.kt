@@ -12,7 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.madcamp.phonebook.domain.model.Diary
-import com.madcamp.phonebook.presentation.Diary.DiaryBeginScreen
+import com.madcamp.phonebook.presentation.diary.DiaryBeginScreen
 import com.madcamp.phonebook.presentation.contact.ContactDetailScreen
 import com.madcamp.phonebook.presentation.contact.ContactListScreen
 import com.madcamp.phonebook.presentation.contact.viewModel.ContactViewModel

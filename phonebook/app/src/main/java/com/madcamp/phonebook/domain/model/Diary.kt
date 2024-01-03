@@ -6,7 +6,7 @@ data class Diary(
     var name: String,
     var icon: Int,
     var image: Uri?,
-    var love: Boolean,
+    var favoriteStatus: Boolean,
     var description: String,
     var dateTime: String,
     var contact: Contact

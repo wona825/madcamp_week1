@@ -22,7 +22,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,6 +40,7 @@ import com.madcamp.phonebook.domain.model.Contact
 import com.madcamp.phonebook.navigation.Screen
 import com.madcamp.phonebook.presentation.component.SearchBox
 import com.madcamp.phonebook.presentation.contact.viewModel.ContactViewModel
+import com.madcamp.phonebook.ui.theme.Brown400
 import com.madcamp.phonebook.ui.theme.Gray200
 import com.madcamp.phonebook.ui.theme.Gray400
 
@@ -86,7 +86,7 @@ fun ContactListScreen(
     ) {
         if (contactViewModel.contactList.isNotEmpty()) {
 
-            Spacer(modifier = Modifier.height(20.dp))
+//            Spacer(modifier = Modifier.height(20.dp))
             SearchBox(
                 text = search,
                 placeholder = "이름, 전화번호로 검색하기",
@@ -94,32 +94,32 @@ fun ContactListScreen(
                     search = newText
                 }
             )
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(5.dp))
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(end = 20.dp),
+                    .padding(end = 10.dp),
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
                     imageVector = Icons.Filled.Favorite,
                     modifier = Modifier
-                        .size(15.dp)
+                        .size(13.dp)
                         .clickable {
                             checkFavoriteStatus = !checkFavoriteStatus
                         },
                     contentDescription = "check_favorite_status_contacts",
-                    tint = if (checkFavoriteStatus) Color.Black else Color.Gray
+                    tint = if (checkFavoriteStatus) Brown400 else Color.Gray
                 )
                 Spacer(modifier = Modifier.width(3.dp))
 
                 Text(
                     text = "즐겨찾기만 보기",
-                    fontSize = 13.sp,
+                    fontSize = 11.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = if (checkFavoriteStatus) Color.Black else Color.Gray,
+                    color = if (checkFavoriteStatus) Brown400 else Color.Gray,
                     modifier = Modifier.clickable { checkFavoriteStatus = !checkFavoriteStatus }
                 )
             }
