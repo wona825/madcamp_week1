@@ -2,27 +2,49 @@ package com.madcamp.phonebook.presentation.diary
 
 import android.annotation.SuppressLint
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.madcamp.phonebook.R
 import com.madcamp.phonebook.navigation.Screen
 import com.madcamp.phonebook.presentation.diary.component.ShowIconForEachDay
 import com.madcamp.phonebook.presentation.diary.viewmodel.DiaryViewModel
+import com.madcamp.phonebook.presentation.gallery.component.getScreenWidth
+import com.madcamp.phonebook.ui.theme.Brown200
+import com.madcamp.phonebook.ui.theme.Brown300
+import com.madcamp.phonebook.ui.theme.Brown400
+import com.madcamp.phonebook.ui.theme.Orange400
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -41,56 +63,78 @@ fun DiaryBeginScreen(navController: NavController, diaryViewModel: DiaryViewMode
     val formattedDateList = formattedDate.split(".")
     val currentYear = formattedDateList[0]
     val currentMonth = formattedDateList[1]
+    val screenWidth = getScreenWidth(LocalContext.current)
 
-        Column(
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(15.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
+
+
+        Row(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(15.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxWidth()
+                .padding(horizontal = 15.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ){
-            // Year
-            Text(
-                text = currentYear,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
-                fontFamily = FontFamily.Monospace
+            Image(
+                painter = painterResource(id = R.drawable.diarybook),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(width = 150.dp, height = 55.dp)
             )
-            Spacer(modifier = Modifier.height(2.dp))
 
-            // Month
             Text(
-                text = currentMonth,
-                fontSize = 35.sp,
-                fontWeight = FontWeight.SemiBold,
-                fontFamily = FontFamily.Monospace
+                text = currentYear + "." + currentMonth,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.ExtraBold,
+                fontFamily = FontFamily.SansSerif,
+                color = Brown400
             )
-            Spacer(modifier = Modifier.height(10.dp))
-
-            ShowIconForEachDay(diaryList)
-
-
-//            Box(
-//                modifier = Modifier.fillMaxWidth().weight(6f).padding(top = 10.dp)
-//            ){
-//                ShowIconForEachDay(diaryList)
-//            }
-
-            // Button to write a journal
-            Box(
-                modifier = Modifier.fillMaxWidth().weight(2f),
-                contentAlignment = Alignment.BottomCenter
-            ){
-                FilledTonalButton(
-
-                    onClick = {
-                        navController.navigate(screen.DiaryWritingScreen)
-                    },
-                    modifier = Modifier.align(Alignment.Center)
-
-                ) {
-                    Text("소중한 오늘 기록하기")
-                }
-            }
-
         }
+
+
+        ShowIconForEachDay(diaryList)
+
+
+        Spacer(modifier = Modifier.height(90.dp))
+
+        Text(
+            text = "오늘 하루는 어땠나요?",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.ExtraBold,
+            fontFamily = FontFamily.SansSerif,
+            color = Brown400
+        )
+        Spacer(modifier = Modifier.height(5.dp))
+
+
+        // Button to write a journal
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(55.dp)
+                .clip(RoundedCornerShape(50))
+                .background(Brown400)
+                .clickable {
+                    navController.navigate(screen.DiaryWritingScreen)
+                }
+                .border(1.dp, Color.Transparent, RoundedCornerShape(4))
+            ,
+            contentAlignment = Alignment.Center
+        ) {
+            androidx.compose.material.Icon(
+                imageVector = Icons.Filled.Add,
+                modifier = Modifier
+                    .size(30.dp)
+                ,
+                contentDescription = "Write a Diary",
+                tint = Brown200
+            )
+        }
+
+    }
 }

@@ -270,11 +270,11 @@ fun DiaryWritingScreen(
                     .background(Brown400)
                     .border(1.dp, Color.Transparent, RoundedCornerShape(4))
                     .clickable {
-                        if (newDiary.image == null) {
+                        if (imageUriValue == null) {
                             Toast.makeText(context, "사진을 추가해주세요!", Toast.LENGTH_SHORT).show()
-                        } else if (newDiary.name == "") {
+                        } else if (title == "") {
                             Toast.makeText(context, "제목을 추가해주세요!", Toast.LENGTH_SHORT).show()
-                        } else if (newDiary.description == "") {
+                        } else if (description == "") {
                             Toast.makeText(context, "설명을 추가해주세요!", Toast.LENGTH_SHORT).show()
                         } else {
                             newDiary.image?.let{
