@@ -29,7 +29,7 @@ fun GalleryIconDropBox(iconValue: MutableState<Int>){
     var expanded by remember{ mutableStateOf(false)}
     val items = listOf("1", "2", "3", "4", "5")
     val screenWidth = getScreenWidth(LocalContext.current)
-    val iconSize = screenWidth / 2
+    val iconSize = screenWidth / 8
     var selectedIndex by remember {mutableStateOf(0)}
 
     Column(
