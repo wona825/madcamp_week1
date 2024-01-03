@@ -34,7 +34,7 @@ import androidx.navigation.NavController
 import com.madcamp.phonebook.MainActivity
 import com.madcamp.phonebook.R
 import com.madcamp.phonebook.domain.model.Diary
-import com.madcamp.phonebook.presentation.Diary.viewmodel.DiaryViewModel
+import com.madcamp.phonebook.presentation.diary.viewmodel.DiaryViewModel
 
 
 @RequiresApi(Build.VERSION_CODES.R)

@@ -1,4 +1,4 @@
-package com.madcamp.phonebook.presentation.Diary.component
+package com.madcamp.phonebook.presentation.diary.component
 
 import android.Manifest
 import android.graphics.Bitmap

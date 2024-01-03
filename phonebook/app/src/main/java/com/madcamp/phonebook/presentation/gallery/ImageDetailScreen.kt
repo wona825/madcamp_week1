@@ -74,8 +74,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.madcamp.phonebook.R
 import com.madcamp.phonebook.domain.model.Diary
-import com.madcamp.phonebook.presentation.Diary.component.IconDropBox
-import com.madcamp.phonebook.presentation.Diary.viewmodel.DiaryViewModel
+import com.madcamp.phonebook.presentation.diary.viewmodel.DiaryViewModel
 import com.madcamp.phonebook.presentation.component.TextBox
 import com.madcamp.phonebook.presentation.contact.formatPhoneNumber
 import com.madcamp.phonebook.presentation.gallery.component.GalleryIconDropBox

@@ -4,7 +4,6 @@ import android.os.Build
 import androidx.activity.ComponentActivity
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.remember
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -18,8 +17,8 @@ import com.madcamp.phonebook.presentation.contact.ContactDetailScreen
 import com.madcamp.phonebook.presentation.contact.ContactListScreen
 import com.madcamp.phonebook.presentation.contact.viewModel.ContactViewModel
 import com.madcamp.phonebook.presentation.TabLayout
-import com.madcamp.phonebook.presentation.Diary.DiaryWritingScreen
-import com.madcamp.phonebook.presentation.Diary.viewmodel.DiaryViewModel
+import com.madcamp.phonebook.presentation.diary.viewmodel.DiaryViewModel
+import com.madcamp.phonebook.presentation.diary.DiaryWritingScreen
 import com.madcamp.phonebook.presentation.gallery.GalleryScreen
 import com.madcamp.phonebook.presentation.gallery.ImageDetailScreen
 

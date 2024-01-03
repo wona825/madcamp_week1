@@ -32,8 +32,8 @@ import androidx.navigation.NavController
 import com.madcamp.phonebook.R
 import com.madcamp.phonebook.domain.model.Diary
 import com.madcamp.phonebook.navigation.Screen
-import com.madcamp.phonebook.presentation.Diary.component.ShowIconForEachDay
-import com.madcamp.phonebook.presentation.Diary.viewmodel.DiaryViewModel
+import com.madcamp.phonebook.presentation.diary.component.ShowIconForEachDay
+import com.madcamp.phonebook.presentation.diary.viewmodel.DiaryViewModel
 import com.madcamp.phonebook.presentation.gallery.component.getScreenWidth
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

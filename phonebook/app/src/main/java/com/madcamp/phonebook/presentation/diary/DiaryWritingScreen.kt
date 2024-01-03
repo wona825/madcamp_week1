@@ -1,4 +1,4 @@
-package com.madcamp.phonebook.presentation.Diary
+package com.madcamp.phonebook.presentation.diary
 
 import android.app.AlertDialog
 import android.net.Uri
@@ -46,9 +46,9 @@ import com.madcamp.phonebook.MainActivity
 import com.madcamp.phonebook.domain.model.Contact
 import com.madcamp.phonebook.domain.model.Diary
 import com.madcamp.phonebook.navigation.Screen
-import com.madcamp.phonebook.presentation.Diary.component.ChooseImage
-import com.madcamp.phonebook.presentation.Diary.component.IconDropBox
-import com.madcamp.phonebook.presentation.Diary.viewmodel.DiaryViewModel
+import com.madcamp.phonebook.presentation.diary.component.ChooseImage
+import com.madcamp.phonebook.presentation.diary.component.IconDropBox
+import com.madcamp.phonebook.presentation.diary.viewmodel.DiaryViewModel
 import com.madcamp.phonebook.presentation.component.TextBox
 import com.madcamp.phonebook.presentation.contact.contactComponent.ContactDropDownBox
 import com.madcamp.phonebook.presentation.contact.viewModel.ContactViewModel

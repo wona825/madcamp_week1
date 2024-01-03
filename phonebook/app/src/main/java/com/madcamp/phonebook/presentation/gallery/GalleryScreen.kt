@@ -30,7 +30,7 @@ import com.madcamp.phonebook.presentation.gallery.component.SearchImage
 import com.madcamp.phonebook.presentation.gallery.component.ShowGalleryOnScreen
 import com.madcamp.phonebook.domain.model.Contact
 import com.madcamp.phonebook.domain.model.Diary
-import com.madcamp.phonebook.presentation.Diary.viewmodel.DiaryViewModel
+import com.madcamp.phonebook.presentation.diary.viewmodel.DiaryViewModel
 
 @RequiresApi(Build.VERSION_CODES.R)
 @Composable

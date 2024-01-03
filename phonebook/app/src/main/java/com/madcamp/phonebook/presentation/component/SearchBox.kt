@@ -22,8 +22,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.madcamp.phonebook.ui.theme.Brown400
 import com.madcamp.phonebook.ui.theme.Gray100
-import com.madcamp.phonebook.ui.theme.Gray200
 import com.madcamp.phonebook.ui.theme.Gray400
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -52,7 +52,7 @@ fun SearchBox(
             Text(
                 text = placeholder,
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Bold
             )
         },
         onValueChange = onValueChange,
@@ -62,7 +62,8 @@ fun SearchBox(
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent,
             placeholderColor = Gray400,
-            backgroundColor = Gray100
+            backgroundColor = Gray100,
+            cursorColor = Brown400
         ),
         trailingIcon = {
             Icon(Icons.Filled.Search, "", Modifier.clickable {

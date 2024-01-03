@@ -1,4 +1,4 @@
-package com.madcamp.phonebook.presentation.Diary.viewmodel
+package com.madcamp.phonebook.presentation.diary.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
