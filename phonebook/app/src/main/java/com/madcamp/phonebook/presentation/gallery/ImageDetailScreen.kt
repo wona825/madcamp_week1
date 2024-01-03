@@ -7,6 +7,7 @@ import android.os.Build
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -22,7 +23,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Favorite
@@ -46,6 +49,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.madcamp.phonebook.R
 import com.madcamp.phonebook.domain.model.Diary
@@ -61,8 +65,12 @@ import com.madcamp.phonebook.ui.theme.Orange400
 @SuppressLint("UnrememberedMutableState")
 @RequiresApi(Build.VERSION_CODES.R)
 @Composable
-fun ImageDetailScreen(navController: NavHostController, diaryViewModel: DiaryViewModel, diary: Diary){
-
+fun ImageDetailScreen(
+    navController: NavController,
+    diaryViewModel: DiaryViewModel,
+    diary: Diary,
+    scrollState: ScrollState = rememberScrollState()
+){
     val screen = Screen()
     val indexOfDiary = diaryViewModel.diaryList.indexOf(diary)
 //    val screenWidth = getScreenWidth(LocalContext.current)
@@ -71,6 +79,7 @@ fun ImageDetailScreen(navController: NavHostController, diaryViewModel: DiaryVie
 
     Column(
         modifier = Modifier
+            .verticalScroll(scrollState)
             .background(color = Brown300)
             .padding(20.dp)
             .fillMaxSize()

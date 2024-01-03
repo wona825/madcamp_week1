@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -71,8 +72,6 @@ fun DiaryBeginScreen(navController: NavController, diaryViewModel: DiaryViewMode
             .padding(15.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -96,11 +95,9 @@ fun DiaryBeginScreen(navController: NavController, diaryViewModel: DiaryViewMode
             )
         }
 
-
         ShowIconForEachDay(diaryList)
 
-
-        Spacer(modifier = Modifier.height(90.dp))
+        Spacer(modifier = Modifier.height(70.dp))
 
         Text(
             text = "오늘 하루는 어땠나요?",
@@ -111,10 +108,10 @@ fun DiaryBeginScreen(navController: NavController, diaryViewModel: DiaryViewMode
         )
         Spacer(modifier = Modifier.height(5.dp))
 
-
         // Button to write a journal
         Box(
             modifier = Modifier
+                .align(Alignment.End)
                 .fillMaxWidth()
                 .height(55.dp)
                 .clip(RoundedCornerShape(50))
@@ -126,15 +123,14 @@ fun DiaryBeginScreen(navController: NavController, diaryViewModel: DiaryViewMode
             ,
             contentAlignment = Alignment.Center
         ) {
-            androidx.compose.material.Icon(
+            Icon(
                 imageVector = Icons.Filled.Add,
-                modifier = Modifier
-                    .size(30.dp)
-                ,
+                modifier = Modifier.size(40.dp),
                 contentDescription = "Write a Diary",
                 tint = Brown200
             )
         }
+        Spacer(modifier = Modifier.height(15.dp))
 
     }
 }
