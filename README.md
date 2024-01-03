@@ -1,3 +1,6 @@
+
+<img width="674" alt="스크린샷 2024-01-03 오후 8 51 25" src="https://github.com/wona825/madcamp_week1/assets/81519167/2842c16c-c822-4b9f-a094-b9a2be319581">
+
 # dear,my; Diary
 연락처 및 갤러리 연동이 가능한 일기 작성 어플리케이션
 
